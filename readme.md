@@ -3,8 +3,8 @@
 This repository contains a simple CLIJ plugin. Clone it to make your own [CLIJ](https://github.com/haesleinhuepf/ClearCLIJ) 
 plugin and run your [OpenCL](https://www.khronos.org/opencl/) code from ImageJ macro.
 
-Just open pom.xml and enter your name, domain, the name of your plugin etc. Afterwards, navigate to PluginTemplate.java 
-to inspect the API of a basic CLIJ plugin. Furthermore, you find example OpenCL code in ClearCLs dialect in template.cl.
+Just open pom.xml and enter your name, domain, the name of your plugin etc. Afterwards, navigate to [PluginTemplate.java](blob/master/src/main/java/com/yourdomain/clijplugin/PluginTemplate.java) 
+to inspect the API of a basic CLIJ plugin. Furthermore, you find example OpenCL code in ClearCLs dialect in [template.cl](blob/master/src/main/java/com/yourdomain/clijplugin/template.cl).
 
 In order to deploy your plugin to your Fiji installation, enter the correct path of your Fiji to the pom file:
 
