@@ -1,9 +1,10 @@
 package com.yourdomain.clijplugin;
 
 import clearcl.ClearCLBuffer;
-import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
-import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
-import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.clij.macro.AbstractCLIJPlugin;
+import net.haesleinhuepf.clij.macro.CLIJMacroPlugin;
+import net.haesleinhuepf.clij.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.clij.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 import java.util.HashMap;
@@ -18,7 +19,7 @@ import java.util.HashMap;
  * 12 2018                                                 V
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_pluginTemplate")
-public class PluginTemplate extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class PluginTemplate extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -43,5 +44,17 @@ public class PluginTemplate extends AbstractCLIJPlugin implements CLIJMacroPlugi
     @Override
     public String getParameterHelpText() {
         return "Image source, Image destination, Number scalar";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Detailed description of your plugin.\n" +
+                "What happens to the image?" +
+                "What do the parameters mean?";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D, 3D";
     }
 }
