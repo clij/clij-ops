@@ -8,22 +8,22 @@
 	<parent>
 		<groupId>net.haesleinhuepf</groupId>
 		<artifactId>clij-parent-pom</artifactId>
-		<version>0.3.0</version>
+		<version>0.7.0</version>
 		<relativePath />
 	</parent>
 
-	<groupId>com.yourdomain</groupId>
+	<groupId>net.haesleinhuepf</groupId>
 	<!-- note: the artifactId must contain an underscore _ to make ImageJ handle it correctly.-->
-	<artifactId>yourplugin_</artifactId>
+	<artifactId>clij-ops</artifactId>
 	<version>0.1.0</version>
 
-	<name>YourPlugin</name>
-	<description>YourPlugin</description>
-	<url>http://yourdomain.com</url>
+	<name>CLIJ Ops</name>
+	<description>CLIJ Interface to utilize ImageJ Ops</description>
+	<url>http://github.com/clij</url>
 	<inceptionYear>2018</inceptionYear>
 	<organization>
-		<name>Your organisation</name>
-		<url>http://yourdomain.com</url>
+		<name>CSBD</name>
+		<url>http://csbdresden.de</url>
 	</organization>
 	<licenses>
 		<license>
@@ -34,10 +34,10 @@
 
 	<developers>
 		<developer>
-			<id>yourid</id>
-			<name>You</name>
-			<url>https://yourdomain.com</url>
-			<organization>Your organisation</organization>
+			<id>frauzufall</id>
+			<name>Deborah Schmidt</name>
+			<url>https://frauzufall.de</url>
+			<organization>CBSD</organization>
 			<roles>
 				<role>developer</role>
 			</roles>
@@ -57,14 +57,14 @@
 	</mailingLists>
 
 	<scm>
-		<connection>scm:git:git://github.com/clij/clij</connection>
-        <developerConnection>scm:git:git@github.com/clij/clij</developerConnection>
+		<connection>scm:git:git://github.com/clij/clij-ops</connection>
+        <developerConnection>scm:git:git@github.com/clij/clij-ops</developerConnection>
         <tag>HEAD</tag>
-		<url>https://github.com/clij/clij</url>
+		<url>https://github.com/clij/clij-ops</url>
 	</scm>
 	<issueManagement>
 		<system>GitHub Issues</system>
-		<url>https://github.com/clij/clij/issues</url>
+		<url>https://github.com/clij/clij-ops/issues</url>
 	</issueManagement>
 	<ciManagement>
 		<system>None</system>
@@ -74,8 +74,6 @@
 		<package-name>com.yourcompany</package-name>
 		<license.licenseName>bsd_3</license.licenseName>
 		<license.copyrightOwners>You</license.copyrightOwners>
-		<imagej.app.directory>C:/programs/fiji-win64/Fiji.app/</imagej.app.directory>
-		<!--<imagej.app.directory>/home/rhaase/programs/fiji/Fiji.app/</imagej.app.directory>-->
 	</properties>
 
 	<dependencies>
@@ -83,13 +81,18 @@
 			<groupId>net.haesleinhuepf</groupId>
 			<artifactId>clij_</artifactId>
      	</dependency>
+		<dependency>
+			<groupId>net.clearcontrol</groupId>
+			<artifactId>clij-clearcl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.haesleinhuepf</groupId>
+			<artifactId>clij_custom_convolution_plugin</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej-ops</artifactId>
+		</dependency>
 	</dependencies>
-
-	<repositories>
-		<repository>
-			<id>hslh</id>
-			<url>http://dl.bintray.com/haesleinhuepf/clij</url>
-		</repository>
-	</repositories>
 
 </project>
