@@ -88,38 +88,30 @@ public class OpGenerator {
         List<String> params = Arrays.asList(getParameterNames(parameters));
 
         String classContent = "";
-        String className = "";
+        String className = getComputerClassName(methodName);
 
         if(params.contains("src") && params.contains("dst")) {
             if(params.contains("src1")) {
                 classContent = buildBinaryComputerOp(header, methodName, parameters, "src", "src1", "dst");
-                className = getComputerClassName(methodName);
             }else {
                 classContent = buildUnaryComputerOp(header, methodName, parameters, "src", "dst");
-                className = getComputerClassName(methodName);
 
             }
         } else if(!params.contains("src") && params.contains("src1") && params.contains("dst")) {
             if(params.contains("src2")) {
                 classContent = buildBinaryComputerOp(header, methodName, parameters, "src1", "src2", "dst");
-                className = getComputerClassName(methodName);
             }else {
                 classContent = buildUnaryComputerOp(header, methodName, parameters, "src1", "dst");
-                className = getComputerClassName(methodName);
 
             }
         } else if(params.contains("clImage") && params.contains("clReducedImage")) {
             classContent = buildUnaryComputerOp(header, methodName, parameters, "clImage", "clReducedImage");
-            className = getComputerClassName(methodName);
         } else if(params.contains("src") && params.contains("dst_max")) {
             classContent = buildUnaryComputerOp(header, methodName, parameters, "src", "dst_max");
-            className = getComputerClassName(methodName);
         } else if(params.contains("input3d") && params.contains("output3d")) {
             classContent = buildUnaryComputerOp(header, methodName, parameters, "input3d", "output3d");
-            className = getComputerClassName(methodName);
         } else if(params.contains("source1") && params.contains("source2") && params.contains("destination")) {
             classContent = buildBinaryComputerOp(header, methodName, parameters, "source1", "source2", "destination");
-            className = getComputerClassName(methodName);
         } else if(params.contains("clImage")) {
             classContent = buildUnaryFunctionOp(header, methodName, parameters, "clImage", returnType);
             className = getFunctionClassName(methodName);
