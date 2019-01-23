@@ -31,7 +31,6 @@ package net.haesleinhuepf.clij.ops.filter.convolve;
 
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
-import net.haesleinhuepf.clij.customconvolutionplugin.Convolve;
 import net.imagej.ops.Contingent;
 import net.imagej.ops.Ops;
 import net.imagej.ops.special.computer.AbstractUnaryComputerOp;
@@ -69,7 +68,7 @@ public class ConvolveCLIJC<I extends RealType<I>, K extends RealType<K>, O exten
 		parameters.put("kernelImage", kernel);
 		parameters.put("dst", dst);
 
-		return clij.execute(Convolve.class,
+		return clij.execute(ConvolveCLIJ.class,
 				"customConvolution.cl",
 				"custom_convolution_" + src.getDimension() + "d",
 				parameters);

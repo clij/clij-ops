@@ -8,14 +8,14 @@
 	<parent>
 		<groupId>net.haesleinhuepf</groupId>
 		<artifactId>clij-parent-pom</artifactId>
-		<version>0.7.0</version>
+		<version>0.8.0</version>
 		<relativePath />
 	</parent>
 
 	<groupId>net.haesleinhuepf</groupId>
 	<!-- note: the artifactId must contain an underscore _ to make ImageJ handle it correctly.-->
 	<artifactId>clij-ops</artifactId>
-	<version>0.1.0</version>
+	<version>0.1.1</version>
 
 	<name>CLIJ Ops</name>
 	<description>CLIJ Interface to utilize ImageJ Ops</description>
@@ -79,16 +79,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>net.haesleinhuepf</groupId>
-			<artifactId>clij_</artifactId>
+			<artifactId>clij-core</artifactId>
      	</dependency>
-		<dependency>
-			<groupId>net.clearcontrol</groupId>
-			<artifactId>clij-clearcl</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.haesleinhuepf</groupId>
-			<artifactId>clij_custom_convolution_plugin</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-ops</artifactId>
