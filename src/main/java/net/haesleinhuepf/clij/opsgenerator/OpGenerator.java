@@ -350,4 +350,34 @@ public class OpGenerator {
         parameters = parameters.replace(")", "");
         return parameters.replace("{", "").split(",");
     }
+
+    private static String buildTestHeader() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("package net.haesleinhuepf.clij.ops\n\n");
+        builder.append("import net.haesleinhuepf.clij.CLIJ\n");
+        builder.append("import net.haesleinhuepf.clij.clearcl.ClearCLBuffer\n");
+        builder.append("import net.imagej.ImageJ\n");
+        builder.append("import net.imglib2.FinalDimensions\n");
+        builder.append("import net.imglib2.img.Img\n");
+        builder.append("import net.imglib2.type.numeric.real.FloatType\n");
+        builder.append("import org.junit.Test\n\n");
+        return builder.toString();
+    }
+
+    private static String buildBinaryComputerTest(String className, String methodName, String param1, String param2) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("public class " + className + "Test {\n\n");
+        builder.append("    @Test\n");
+        builder.append("    public void " + methodName + "Test () {\n");
+        builder.append("        ImageJ ij = new ImageJ();\n");
+        builder.append("        Img img1 = ij.op().create().img(new FinalDimensions(10, 10, 10), new FloatType());\n");
+        builder.append("        Img img2 = img1.copy();\n");
+        builder.append("        CLIJ clij = CLIJ.getInstance();\n");
+        builder.append("        ClearCLBuffer input = clij.convert(img1, ClearCLBuffer.class);\n");
+        builder.append("        ClearCLBuffer output = clij.convert(img2, ClearCLBuffer.class);\n");
+        builder.append("        ij.op().run(" + className + ".class, input, output);\n");
+        builder.append("    }\n\n");
+        builder.append("}\n");
+        return builder.toString();
+    }
 }
