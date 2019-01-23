@@ -68,7 +68,7 @@ public class ConvolveCLIJC<I extends RealType<I>, K extends RealType<K>, O exten
 		parameters.put("kernelImage", kernel);
 		parameters.put("dst", dst);
 
-		return clij.execute(ConvolveCLIJ.class,
+		return clij.execute(ConvolveCLIJC.class,
 				"customConvolution.cl",
 				"custom_convolution_" + src.getDimension() + "d",
 				parameters);

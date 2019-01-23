@@ -57,9 +57,7 @@ public class ConvolveTest extends AbstractOpTest {
 		final Img<FloatType> phantom = createPhantom();
 
 		final RandomAccessibleInterval<FloatType> psf = createKernel(phantom);
-		final RandomAccessibleInterval<FloatType> output = phantom.factory().create(phantom);
-
-		ops.filter().convolve(output, phantom, psf);
+		final RandomAccessibleInterval<FloatType> output = ops.filter().convolve(phantom, psf);
 	}
 	
 	@Test
