@@ -42,10 +42,10 @@ import org.scijava.plugin.Plugin;
 import java.util.HashMap;
 
 /**
- * Convolves an image naively.
+ * Convolves an image with OpenCL.
  */
 @Plugin(type = Ops.Filter.Convolve.class)
-public class ConvolveCLIJ<I extends RealType<I>, K extends RealType<K>, O extends RealType<O>>
+public class ConvolveCLIJC<I extends RealType<I>, K extends RealType<K>, O extends RealType<O>>
 	extends
 	AbstractUnaryComputerOp<ClearCLBuffer, ClearCLBuffer>
 	implements Ops.Filter.Convolve, Contingent
