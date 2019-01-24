@@ -13,9 +13,8 @@
 	</parent>
 
 	<groupId>net.haesleinhuepf</groupId>
-	<!-- note: the artifactId must contain an underscore _ to make ImageJ handle it correctly.-->
 	<artifactId>clij-ops</artifactId>
-	<version>0.1.1</version>
+	<version>0.2.0</version>
 
 	<name>CLIJ Ops</name>
 	<description>CLIJ Interface to utilize ImageJ Ops</description>
@@ -38,6 +37,15 @@
 			<name>Deborah Schmidt</name>
 			<url>https://frauzufall.de</url>
 			<organization>CBSD</organization>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>haesleinhuepf</id>
+			<name>Robert Haase</name>
+			<url>https://haesleinhuepf.net</url>
+			<organization>MPI CBG</organization>
 			<roles>
 				<role>developer</role>
 			</roles>

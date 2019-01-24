@@ -1,21 +1,24 @@
 package net.haesleinhuepf.clij.opsgenerator;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static net.haesleinhuepf.clij.opsgenerator.BinaryComputerOpBuilder.buildBinaryComputerOp;
+import static net.haesleinhuepf.clij.opsgenerator.OpInterfaceBuilder.writeInterfaceClass;
+import static net.haesleinhuepf.clij.opsgenerator.UnaryComputerOpBuilder.buildUnaryComputerOp;
+import static net.haesleinhuepf.clij.opsgenerator.UnaryFunctionOpBuilder.buildUnaryFunctionOp;
 
 /**
  * OpGenerator
  * <p>
  * <p>
  * <p>
- * Author: @haesleinhuepf
+ * Author: @frauzufall
  * 01 2019
  */
 public class OpGenerator {
 
+    static String root = "/home/random/Development/imagej/project/clij/clij-ops/src/main/java/net/haesleinhuepf/clij/ops/generated/";
 
     public final static Map<String, String> primitiveMap = new HashMap<>();
     static {
@@ -30,13 +33,44 @@ public class OpGenerator {
     }
 
     public static void main(String ... args) throws IOException {
-//        Kernels.class.get
+
         File inputFile = new File("/home/random/Development/imagej/project/clij/clij-core/src/main/java/net/haesleinhuepf/clij/kernels/Kernels.java");
 
         BufferedReader br = new BufferedReader(new FileReader(inputFile));
 
+        String header = processImports(br);
+
+        int opCreated = 0;
+        int opNotCreated = 0;
+
+        List<String> methods = locateMethods(br);
+        List<String> methodNames = getMethodNames(methods);
+        for (int i = 0; i < methods.size(); i++) {
+            String methodName = methodNames.get(i);
+            int methodCount = Collections.frequency(methodNames, methodName);
+            String namespace = getNamespaceName(methodName);
+            writeInterfaceClass(namespace);
+            for (int j = 0; j < methodCount; j++) {
+                if(processKernelFunction(header, namespace, methods.get(i+j))) opCreated++;
+                else opNotCreated++;
+            }
+            i += methodCount-1;
+        }
+
+        System.out.println(methods.size() + " kernel functions available, " + opCreated + " ops created, " + opNotCreated + " kernel functions failed");
+
+    }
+
+    private static List<String> getMethodNames(List<String> functions) {
+        List<String> res = new ArrayList<>();
+        for (int i = 0; i < functions.size(); i++) {
+            res.add(getMethodName(functions.get(i)));
+        }
+        return res;
+    }
+
+    private static String processImports(BufferedReader br) throws IOException {
         StringBuilder header = new StringBuilder();
-        header.append("package net.haesleinhuepf.clij.ops;\n");
         header.append("import net.haesleinhuepf.clij.CLIJ;\n");
         header.append("import net.haesleinhuepf.clij.kernels.Kernels;\n");
         header.append("import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;\n");
@@ -62,71 +96,100 @@ public class OpGenerator {
         }
 
         header.append("// This is generated code. See src/test/java/net/haesleinhuepf/clij/opsgenerator for details\n");
-
-        int opCreated = 0;
-        int opNotCreated = 0;
-
-        while ((line = br.readLine()) != null) {
-            line = line.trim();
-
-            if (line.startsWith("public")) {
-                if(processKernelFunction(header.toString(), line)) opCreated++;
-                else opNotCreated++;
-            }
-        }
-
-        System.out.println(opCreated + " ops created, " + opNotCreated + " kernel functions ignored");
-
+        return header.toString();
     }
 
-    private static boolean processKernelFunction(String header, String line) throws IOException {
+    private static List<String> locateMethods(BufferedReader br) throws IOException {
+        List<String> res = new ArrayList<>();
+        String line;
+        while ((line = br.readLine()) != null) {
+            line = line.trim();
+            if (line.startsWith("public")) {
+                res.add(line);
+            }
+        }
+        res.sort(String::compareTo);
+        return res;
+    }
 
-        String methodName = getMethodName(line);
-        String[] parameters = getParameters(line);
-        String returnType = getReturnType(line);
+    private static boolean processKernelFunction(String header, String namespace, String line) throws IOException {
 
-        List<String> params = Arrays.asList(getParameterNames(parameters));
+        OpProperties props = new OpProperties();
+
+        props.methodName = getMethodName(line);
+        props.parameters = getParameters(line);
+        props.returnType = getReturnType(line);
+        props.namespace = namespace;
+        props.header = header;
+
+        List<String> params = Arrays.asList(getParameterNames(props.parameters));
 
         String classContent = "";
-        String className = getComputerClassName(methodName);
 
         if(params.contains("src") && params.contains("dst")) {
+            props.src1Parameter = "src";
+            props.dstParameter = "dst";
             if(params.contains("src1")) {
-                classContent = buildBinaryComputerOp(header, methodName, parameters, "src", "src1", "dst");
+                props.src2Parameter = "src1";
+                props.className = getBinaryClassName(getComputerClassName(props.methodName), props);
+                classContent = buildBinaryComputerOp(props);
             }else {
-                classContent = buildUnaryComputerOp(header, methodName, parameters, "src", "dst");
-
+                props.className = getUnaryClassName(getComputerClassName(props.methodName), props);
+                classContent = buildUnaryComputerOp(props);
             }
         } else if(!params.contains("src") && params.contains("src1") && params.contains("dst")) {
+            props.src1Parameter = "src1";
+            props.dstParameter = "dst";
             if(params.contains("src2")) {
-                classContent = buildBinaryComputerOp(header, methodName, parameters, "src1", "src2", "dst");
+                props.src2Parameter = "src2";
+                props.className = getBinaryClassName(getComputerClassName(props.methodName), props);
+                classContent = buildBinaryComputerOp(props);
             }else {
-                classContent = buildUnaryComputerOp(header, methodName, parameters, "src1", "dst");
-
+                props.className = getUnaryClassName(getComputerClassName(props.methodName), props);
+                classContent = buildUnaryComputerOp(props);
             }
         } else if(params.contains("clImage") && params.contains("clReducedImage")) {
-            classContent = buildUnaryComputerOp(header, methodName, parameters, "clImage", "clReducedImage");
+            props.src1Parameter = "clImage";
+            props.dstParameter = "clReducedImage";
+            props.className = getUnaryClassName(getComputerClassName(props.methodName), props);
+            classContent = buildUnaryComputerOp(props);
         } else if(params.contains("src") && params.contains("dst_max")) {
-            classContent = buildUnaryComputerOp(header, methodName, parameters, "src", "dst_max");
+            props.src1Parameter = "src";
+            props.dstParameter = "dst_max";
+            props.className = getUnaryClassName(getComputerClassName(props.methodName), props);
+            classContent = buildUnaryComputerOp(props);
         } else if(params.contains("input3d") && params.contains("output3d")) {
-            classContent = buildUnaryComputerOp(header, methodName, parameters, "input3d", "output3d");
+            props.src1Parameter = "input3d";
+            props.dstParameter = "output3d";
+            props.className = getUnaryClassName(getComputerClassName(props.methodName), props);
+            classContent = buildUnaryComputerOp(props);
         } else if(params.contains("source1") && params.contains("source2") && params.contains("destination")) {
-            classContent = buildBinaryComputerOp(header, methodName, parameters, "source1", "source2", "destination");
+            props.src1Parameter = "source1";
+            props.src2Parameter = "source2";
+            props.dstParameter = "destination";
+            props.className = getBinaryClassName(getComputerClassName(props.methodName), props);
+            classContent = buildBinaryComputerOp(props);
         } else if(params.contains("clImage")) {
-            classContent = buildUnaryFunctionOp(header, methodName, parameters, "clImage", returnType);
-            className = getFunctionClassName(methodName);
+            props.src1Parameter = "clImage";
+            props.className = getUnaryFunctionClassName(getFunctionClassName(props.methodName), props);
+            classContent = buildUnaryFunctionOp(props);
         } else if(params.contains("input")) {
-            classContent = buildUnaryFunctionOp(header, methodName, parameters, "input", returnType);
-            className = getFunctionClassName(methodName);
+            props.src1Parameter = "input";
+            props.className = getUnaryFunctionClassName(getFunctionClassName(props.methodName), props);
+            classContent = buildUnaryFunctionOp(props);
         }
         boolean success = true;
         if(classContent.isEmpty()) {
             success = false;
            classContent = "// Could not parse kernel function.\n";
-            System.out.println("Could not parse kernel function " + methodName);
+           props.className = "Failed" + getClassName(props.methodName);
+            System.out.println("Could not parse kernel function " + props.methodName);
         }
 
-        File outputTarget = new File("/home/random/Development/imagej/project/clij/clij-ops/src/main/java/net/haesleinhuepf/clij/ops/" + className + ".java");
+        File outputDir = new File(root + (namespace.isEmpty() ? "" : namespace + "/"));
+        outputDir.mkdirs();
+        File outputTarget = new File(outputDir.getAbsolutePath() + "/"
+                + props.className + ".java");
         outputTarget.createNewFile();
 
         FileWriter writer = new FileWriter(outputTarget);
@@ -135,158 +198,12 @@ public class OpGenerator {
         return success;
     }
 
-	private static String buildUnaryFunctionOp(String header, String methodName, String[] parameters, String srcParameter, String outputType) {
-
-		String className = getFunctionClassName(methodName);
-		String srcClass = getParameterClass(getParameter(parameters, srcParameter));
-		String srcName = getParameterName(getParameter(parameters, srcParameter));
-
-		StringBuilder builder = new StringBuilder();
-		builder.append(header);
-		builder.append("\n");
-		builder.append("@Plugin(type = Op.class)\n");
-		builder.append("public class " + className + "\n");
-		builder.append("        extends\n");
-		builder.append("        AbstractUnaryFunctionOp<" + srcClass + ", " + outputType + ">\n");
-		builder.append("        implements Op, Contingent\n");
-		builder.append("{\n\n");
-		for (String parameter : parameters) {
-			builder.append(buildParameter(parameter, srcParameter));
-		}
-		builder.append("    @Override\n");
-		builder.append("    public " + outputType + " calculate(final " + srcClass + " input)\n");
-		builder.append("    {\n");
-		builder.append("        final CLIJ clij = CLIJ.getInstance();\n\n");
-
-		StringBuilder parametersForCall = new StringBuilder();
-		parametersForCall.append("clij");
-
-		int count = 0;
-		for (String parameter : parameters) {
-			String parameterName = getParameterName(parameter);
-			if(parameterName.equals(srcName)) parameterName = "input";
-			if (count > 0) {
-				parametersForCall.append(", ");
-				parametersForCall.append(parameterName);
-			}
-			count++;
-		}
-		builder.append("            return Kernels." + methodName + "(");
-		builder.append(parametersForCall.toString());
-		builder.append(");\n");
-        builder.append("    }\n\n");
-
-		builder.append(buildConformFunction());
-		builder.append("}\n");
-		return builder.toString();
-	}
-
-    private static String buildUnaryComputerOp(String header, String methodName, String[] parameters, String srcParameter, String dstParameter) {
-
-        String className = getComputerClassName(methodName);
-        String srcClass = getParameterClass(getParameter(parameters, srcParameter));
-        String dstClass = getParameterClass(getParameter(parameters, dstParameter));
-        String srcName = getParameterName(getParameter(parameters, srcParameter));
-        String dstName = getParameterName(getParameter(parameters, dstParameter));
-
-        StringBuilder builder = new StringBuilder();
-        builder.append(header);
-        builder.append("\n");
-        builder.append("@Plugin(type = Op.class)\n");
-        builder.append("public class " + className + "\n");
-        builder.append("        extends\n");
-        builder.append("        AbstractUnaryComputerOp<" + srcClass + "," + dstClass + ">\n");
-        builder.append("        implements Op, Contingent\n");
-        builder.append("{\n\n");
-        for (String parameter : parameters) {
-            builder.append(buildParameter(parameter, srcParameter, dstParameter));
-        }
-        builder.append("    @Override\n");
-        builder.append("    public void compute(final " + srcClass + " input, final " + dstClass + " output)\n");
-        builder.append("    {\n");
-        builder.append("        final CLIJ clij = CLIJ.getInstance();\n\n");
-
-        StringBuilder parametersForCall = new StringBuilder();
-        parametersForCall.append("clij");
-
-        int count = 0;
-        for (String parameter : parameters) {
-            String parameterName = getParameterName(parameter);
-            if(parameterName.equals(srcName)) parameterName = "input";
-            if(parameterName.equals(dstName)) parameterName = "output";
-            if (count > 0) {
-                parametersForCall.append(", ");
-                parametersForCall.append(parameterName);
-            }
-            count++;
-        }
-        builder.append("            Kernels." + methodName + "(");
-        builder.append(parametersForCall.toString());
-        builder.append(");\n");
-        builder.append("    }\n\n");
-
-        builder.append(buildConformFunction());
-        builder.append("}\n");
-        return builder.toString();
-    }
-
-    private static String getParameter(String[] parameters, String srcParameter) {
+    static String getParameter(String[] parameters, String srcParameter) {
         List<String> parameterNames = Arrays.asList(getParameterNames(parameters));
         return parameters[parameterNames.indexOf(srcParameter)];
     }
 
-    private static String buildBinaryComputerOp(String header, String methodName, String[] parameters, String srcParameter, String src1Parameter, String dstParameter) {
-        String className = getComputerClassName(methodName);
-        String srcClass = getParameterClass(getParameter(parameters, srcParameter));
-        String src1Class = getParameterClass(getParameter(parameters, src1Parameter));
-        String dstClass = getParameterClass(getParameter(parameters, dstParameter));
-        String srcName = getParameterName(getParameter(parameters, srcParameter));
-        String src1Name = getParameterName(getParameter(parameters, src1Parameter));
-        String dstName = getParameterName(getParameter(parameters, dstParameter));
-
-        StringBuilder builder = new StringBuilder();
-        builder.append(header);
-        builder.append("\n");
-        builder.append("@Plugin(type = Op.class)\n");
-        builder.append("public class " + className + "\n");
-        builder.append("        extends\n");
-        builder.append("        AbstractBinaryComputerOp<" + srcClass + ", " + src1Class + ", " + dstClass + ">\n");
-        builder.append("        implements Op, Contingent\n");
-        builder.append("{\n\n");
-        for (String parameter : parameters) {
-            builder.append(buildParameter(parameter, srcParameter, src1Parameter, dstParameter));
-        }
-        builder.append("    @Override\n");
-        builder.append("    public void compute(final " + srcClass + " input1, final " + src1Class + " input2, final " + dstClass + " output)\n");
-        builder.append("    {\n");
-        builder.append("        final CLIJ clij = CLIJ.getInstance();\n\n");
-
-        StringBuilder parametersForCall = new StringBuilder();
-        parametersForCall.append("clij");
-
-        int count = 0;
-        for (String parameter : parameters) {
-            String parameterName = getParameterName(parameter);
-            if(parameterName.equals(srcName)) parameterName = "input1";
-            if(parameterName.equals(src1Name)) parameterName = "input2";
-            if(parameterName.equals(dstName)) parameterName = "output";
-            if (count > 0) {
-                parametersForCall.append(", ");
-                parametersForCall.append(parameterName);
-            }
-            count++;
-        }
-        builder.append("        Kernels." + methodName + "(");
-        builder.append(parametersForCall.toString());
-        builder.append(");\n");
-        builder.append("    }\n\n");
-
-        builder.append(buildConformFunction());
-        builder.append("}\n");
-        return builder.toString();
-    }
-
-    private static String buildParameter(String parameter, String... ignore) {
+    static String buildParameter(String parameter, String... ignore) {
         StringBuilder builder = new StringBuilder();
         String name = getParameterName(parameter);
         if(Arrays.asList(ignore).contains(name) || name.equals("clij")) return "";
@@ -295,7 +212,7 @@ public class OpGenerator {
         return builder.toString();
     }
 
-    private static String buildConformFunction() {
+    static String buildConformFunction() {
         StringBuilder builder = new StringBuilder();
         builder.append("    @Override\n");
         builder.append("    public boolean conforms() {\n");
@@ -304,7 +221,7 @@ public class OpGenerator {
         return builder.toString();
     }
 
-    private static String[] getParameterNames(String[] parameters) {
+    static String[] getParameterNames(String[] parameters) {
         String[] res = new String[parameters.length];
         for (int i = 0; i < res.length; i++) {
             res[i] = getParameterName(parameters[i]);
@@ -312,17 +229,17 @@ public class OpGenerator {
         return res;
     }
 
-    private static String getParameterName(String parameter) {
+    static String getParameterName(String parameter) {
         return parameter.trim().split(" ")[1];
     }
 
-    private static String getParameterClass(String parameter) {
+    static String getParameterClass(String parameter) {
         String className = parameter.trim().split(" ")[0];
         if(primitiveMap.containsKey(className)) return primitiveMap.get(className);
         else return className;
     }
 
-    private static String getReturnType(String line) {
+    static String getReturnType(String line) {
         String[] temp = line.split("\\(");
         temp = temp[0].trim().split(" ");
         String className = temp[temp.length - 2];
@@ -330,54 +247,57 @@ public class OpGenerator {
         else return className;
     }
 
-    private static String getComputerClassName(String methodName) {
-        return methodName.substring(0,1).toUpperCase() + methodName.substring(1) + "CLIJC";
+    static String getClassName(String methodName) {
+        if(methodName.isEmpty()) return "";
+        return methodName.substring(0,1).toUpperCase() + methodName.substring(1);
     }
 
-    private static String getFunctionClassName(String methodName) {
-        return methodName.substring(0,1).toUpperCase() + methodName.substring(1) + "CLIJF";
+    static String getNamespaceName(String methodName) {
+        return methodName + "CLIJ";
     }
 
-    private static String getMethodName(String line) {
+    static String getComputerClassName(String methodName) {
+        return getClassName(methodName) + "CLIJC";
+    }
+
+    static String getFunctionClassName(String methodName) {
+        return getClassName(methodName) + "CLIJF";
+    }
+
+    static String getUnaryClassName(String className, OpProperties props) {
+        String srcClass = getParameterClass(getParameter(props.parameters, props.src1Parameter));
+        String dstClass = getParameterClass(getParameter(props.parameters, props.dstParameter));
+        return className + srcClass + dstClass;
+    }
+
+    static String getUnaryFunctionClassName(String className, OpProperties props) {
+        String srcClass = getParameterClass(getParameter(props.parameters, props.src1Parameter));
+        return className + srcClass;
+    }
+
+    static String getBinaryClassName(String className, OpProperties props) {
+        String src1Class = getParameterClass(getParameter(props.parameters, props.src1Parameter));
+        String src2Class = getParameterClass(getParameter(props.parameters, props.src2Parameter));
+        String dstClass = getParameterClass(getParameter(props.parameters, props.dstParameter));
+        return className + src1Class + src2Class + dstClass;
+    }
+
+    static String getMethodName(String line) {
         String[] temp = line.split("\\(");
         temp = temp[0].trim().split(" ");
         return temp[temp.length - 1];
     }
 
-    private static String[] getParameters(String line) {
+    static String[] getParameters(String line) {
         String[] temp = line.split("\\(");
         String parameters = temp[1].trim();
         parameters = parameters.replace(")", "");
         return parameters.replace("{", "").split(",");
     }
 
-    private static String buildTestHeader() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("package net.haesleinhuepf.clij.ops\n\n");
-        builder.append("import net.haesleinhuepf.clij.CLIJ\n");
-        builder.append("import net.haesleinhuepf.clij.clearcl.ClearCLBuffer\n");
-        builder.append("import net.imagej.ImageJ\n");
-        builder.append("import net.imglib2.FinalDimensions\n");
-        builder.append("import net.imglib2.img.Img\n");
-        builder.append("import net.imglib2.type.numeric.real.FloatType\n");
-        builder.append("import org.junit.Test\n\n");
-        return builder.toString();
+    static String getOpDep(String namespaceClass) {
+        if(namespaceClass.isEmpty()) return "Op";
+        return namespaceClass;
     }
 
-    private static String buildBinaryComputerTest(String className, String methodName, String param1, String param2) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("public class " + className + "Test {\n\n");
-        builder.append("    @Test\n");
-        builder.append("    public void " + methodName + "Test () {\n");
-        builder.append("        ImageJ ij = new ImageJ();\n");
-        builder.append("        Img img1 = ij.op().create().img(new FinalDimensions(10, 10, 10), new FloatType());\n");
-        builder.append("        Img img2 = img1.copy();\n");
-        builder.append("        CLIJ clij = CLIJ.getInstance();\n");
-        builder.append("        ClearCLBuffer input = clij.convert(img1, ClearCLBuffer.class);\n");
-        builder.append("        ClearCLBuffer output = clij.convert(img2, ClearCLBuffer.class);\n");
-        builder.append("        ij.op().run(" + className + ".class, input, output);\n");
-        builder.append("    }\n\n");
-        builder.append("}\n");
-        return builder.toString();
-    }
 }
