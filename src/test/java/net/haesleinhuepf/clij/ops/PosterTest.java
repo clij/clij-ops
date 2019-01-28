@@ -14,18 +14,21 @@ import net.imglib2.img.Img;
 import net.imglib2.type.numeric.real.FloatType;
 import org.junit.Test;
 
+import java.io.IOException;
+
 public class PosterTest {
 
 	@Test
-	public void testPosterOpVersion() {
+	public void testPosterOpVersion() throws IOException {
 		ImageJ ij = new ImageJ();
+		Img input = ij.op().create().img(new FinalDimensions(100,100,100), new FloatType());
 
-		int runs = 10;
+		int runs = 1;
 
 		for (int i = 0; i < runs; i++) {
 			long timeOpStart = System.currentTimeMillis();
 
-			runOpVersion(ij);
+			runOpVersion(ij, input);
 
 			long timeOpEnd = System.currentTimeMillis();
 
@@ -35,7 +38,7 @@ public class PosterTest {
 		for (int i = 0; i < runs; i++) {
 			long timeOpCLIJStart = System.currentTimeMillis();
 
-			runOpCLIJVersion(ij);
+			runOpCLIJVersion(ij, input);
 
 			long timeOpCLIJEnd = System.currentTimeMillis();
 
@@ -43,9 +46,9 @@ public class PosterTest {
 		}
 	}
 
-	private void runOpCLIJVersion(ImageJ ij) {
+	static Img runOpCLIJVersion(ImageJ ij, Img _imginput) throws IOException {
 		CLIJ clij = CLIJ.getInstance();
-		Img imginput = ij.op().create().img(new FinalDimensions(20,20,20), new FloatType());
+		Img imginput = ij.op().convert().float32(_imginput);
 		ClearCLBuffer input = clij.convert(imginput, ClearCLBuffer.class);
 		ClearCLBuffer output = clij.create(input);
 
@@ -57,12 +60,12 @@ public class PosterTest {
 		input = output; output = clij.create(input);
 		int radius = 5;
 		ij.op().run(MeanBoxCLIJ.class, output, input, radius, radius, radius);
+		return (Img) clij.convert(output, RandomAccessibleInterval.class);
 
-		Img imgoutput = (Img) clij.convert(output, RandomAccessibleInterval.class);
 	}
 
-	private void runOpVersion(ImageJ ij) {
-		Img input = ij.op().create().img(new FinalDimensions(20,20,20), new FloatType());
+	static Img runOpVersion(ImageJ ij, Img imginput) throws IOException {
+		Img input = ij.op().convert().float32(imginput);
 		Img output = input.copy();
 
 		FloatType value = new FloatType(5);
@@ -73,6 +76,7 @@ public class PosterTest {
 		input = output; output = input.copy();
 		long radius = 5;
 		ij.op().filter().mean(output, input, new HyperSphereShape(radius));
+		return output;
 	}
 
 }
