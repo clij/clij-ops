@@ -27,7 +27,7 @@
  * #L%
  */
 
-package net.haesleinhuepf.clij.ops.filter.convolve;
+package net.haesleinhuepf.clij.ops.filter;
 
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;

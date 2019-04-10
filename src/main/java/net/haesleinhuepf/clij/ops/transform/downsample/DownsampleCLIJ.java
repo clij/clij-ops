@@ -1,4 +1,4 @@
-package net.haesleinhuepf.clij.ops.generated.downsampleCLIJ;
+package net.haesleinhuepf.clij.ops.transform.downsample;
 
 import net.imagej.ops.Op;
 

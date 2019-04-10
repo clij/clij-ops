@@ -3,10 +3,8 @@ package net.haesleinhuepf.clij.ops;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.ops.generated.addImageAndScalarCLIJ.AddImageAndScalarCLIJ;
-import net.haesleinhuepf.clij.ops.generated.blurFastCLIJ.BlurFastCLIJ;
+import net.haesleinhuepf.clij.ops.generated.blurCLIJ.BlurCLIJ;
 import net.haesleinhuepf.clij.ops.generated.meanBoxCLIJ.MeanBoxCLIJ;
-import net.imagej.ImageJ;
-import net.imglib2.FinalDimensions;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.neighborhood.HyperSphereShape;
@@ -14,39 +12,35 @@ import net.imglib2.img.Img;
 import net.imglib2.type.numeric.real.FloatType;
 import org.junit.Test;
 
-import java.io.IOException;
+public class PosterTest extends CLIJOpsTest {
 
-public class PosterTest {
+	Img input = createAscendingImage();
 
 	@Test
-	public void testPosterOpVersion() throws IOException {
-		ImageJ ij = new ImageJ();
-		Img input = ij.op().create().img(new FinalDimensions(100,100,100), new FloatType());
-
-		int runs = 1;
-
+	public void benchmarkScale() {
+		int runs = 3;
 		for (int i = 0; i < runs; i++) {
 			long timeOpStart = System.currentTimeMillis();
-
-			runOpVersion(ij, input);
-
+			runOpVersion(input);
 			long timeOpEnd = System.currentTimeMillis();
-
 			System.out.println("ImageJ2 Op version took " + (timeOpEnd - timeOpStart) + " ms");
 		}
-
 		for (int i = 0; i < runs; i++) {
 			long timeOpCLIJStart = System.currentTimeMillis();
-
-			runOpCLIJVersion(ij, input);
-
+			runOpCLIJVersion(input);
 			long timeOpCLIJEnd = System.currentTimeMillis();
-
 			System.out.println("ImageJ2 CLIJ Op version took " + (timeOpCLIJEnd - timeOpCLIJStart) + " ms");
 		}
 	}
 
-	static Img runOpCLIJVersion(ImageJ ij, Img _imginput) throws IOException {
+	@Test
+	public void compareScaleResults() {
+		Img outputOp = runOpVersion(input);
+		Img outputCLIJ = runOpCLIJVersion(input);
+		compare(outputOp, outputCLIJ);
+	}
+
+	private Img runOpCLIJVersion(Img _imginput) {
 		CLIJ clij = CLIJ.getInstance();
 		Img imginput = ij.op().convert().float32(_imginput);
 		ClearCLBuffer input = clij.convert(imginput, ClearCLBuffer.class);
@@ -56,7 +50,7 @@ public class PosterTest {
 		ij.op().run(AddImageAndScalarCLIJ.class, output, input, value);
 		input = output; output = clij.create(input);
 		double sigma = 5;
-		ij.op().run(BlurFastCLIJ.class, output, input, sigma, sigma, sigma);
+		ij.op().run(BlurCLIJ.class, output, input, sigma, sigma, sigma);
 		input = output; output = clij.create(input);
 		int radius = 5;
 		ij.op().run(MeanBoxCLIJ.class, output, input, radius, radius, radius);
@@ -64,7 +58,7 @@ public class PosterTest {
 
 	}
 
-	static Img runOpVersion(ImageJ ij, Img imginput) throws IOException {
+	private Img runOpVersion(Img imginput) {
 		Img input = ij.op().convert().float32(imginput);
 		Img output = input.copy();
 
