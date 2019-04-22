@@ -3,7 +3,7 @@ package net.haesleinhuepf.clij.ops;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.ops.generated.addImagesWeightedCLIJ.AddImagesWeightedCLIJ;
-import net.haesleinhuepf.clij.ops.generated.blurFastCLIJ.BlurFastCLIJ;
+import net.haesleinhuepf.clij.ops.generated.blurCLIJ.BlurCLIJ;
 import net.haesleinhuepf.clij.ops.generated.maximumImageAndScalarCLIJ.MaximumImageAndScalarCLIJ;
 import net.haesleinhuepf.clij.ops.transform.downsample.DownsampleCLIJ;
 import net.imagej.ImageJ;
@@ -53,11 +53,11 @@ public class PosterTestInteractive {
 
 		//blur
 
-		ij.op().run(BlurFastCLIJ.class, firstFiltered, original, smallBlurSigmaInPixels, smallBlurSigmaInPixels, 0);
+		ij.op().run(BlurCLIJ.class, firstFiltered, original, smallBlurSigmaInPixels, smallBlurSigmaInPixels, 0);
 
 		ClearCLBuffer secondFiltered = clij.create(original);
 
-		ij.op().run(BlurFastCLIJ.class, secondFiltered, original, blurSigmaInPixels, blurSigmaInPixels, 0);
+		ij.op().run(BlurCLIJ.class, secondFiltered, original, blurSigmaInPixels, blurSigmaInPixels, 0);
 		ClearCLBuffer imageDoG = clij.create(original);
 		ij.op().run(AddImagesWeightedCLIJ.class, imageDoG, firstFiltered, secondFiltered, 1.0, -1.0);
 		ClearCLBuffer positiveStack = clij.create(original);

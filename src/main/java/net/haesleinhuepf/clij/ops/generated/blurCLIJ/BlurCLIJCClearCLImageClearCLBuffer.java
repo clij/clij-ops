@@ -1,6 +1,7 @@
 package net.haesleinhuepf.clij.ops.generated.blurCLIJ;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
+import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.imagej.ops.Contingent;
 import net.imagej.ops.Op;
 import net.imagej.ops.special.computer.AbstractUnaryComputerOp;
@@ -10,9 +11,9 @@ import net.haesleinhuepf.clij.clearcl.ClearCLImage;
 // This is generated code. See src/test/java/net/haesleinhuepf/clij/opsgenerator for details
 
 @Plugin(type = Op.class)
-public class BlurCLIJCClearCLImageClearCLImage
+public class BlurCLIJCClearCLImageClearCLBuffer
         extends
-        AbstractUnaryComputerOp<ClearCLImage,ClearCLImage>
+        AbstractUnaryComputerOp<ClearCLImage,ClearCLBuffer>
         implements BlurCLIJ, Contingent
 {
 
@@ -26,7 +27,7 @@ public class BlurCLIJCClearCLImageClearCLImage
     private float blurSigmaZ;
 
     @Override
-    public void compute(final ClearCLImage input, final ClearCLImage output)
+    public void compute(final ClearCLImage input, final ClearCLBuffer output)
     {
         final CLIJ clij = CLIJ.getInstance();
 

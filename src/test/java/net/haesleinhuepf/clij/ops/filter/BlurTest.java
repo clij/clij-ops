@@ -2,7 +2,7 @@ package net.haesleinhuepf.clij.ops.filter;
 
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.ops.CLIJOpsTest;
-import net.haesleinhuepf.clij.ops.generated.blurFastCLIJ.BlurFastCLIJ;
+import net.haesleinhuepf.clij.ops.generated.blurCLIJ.BlurCLIJ;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import org.junit.Test;
@@ -10,7 +10,7 @@ import org.junit.Test;
 /*
  * Compares op.filter().gauss() with CLIJ_blurFast / CLIJ_blur
  */
-public class BlurFastTest extends CLIJOpsTest {
+public class BlurTest extends CLIJOpsTest {
 
 	float sigma = 5;
 	Img input = createAscendingImage();
@@ -46,7 +46,7 @@ public class BlurFastTest extends CLIJOpsTest {
 		double sigma = 5;
 		printDim("CLIJ version input", _imginput);
 		printDim("CLIJ version buffer  input", input);
-		ij.op().run(BlurFastCLIJ.class, output, input, sigma, sigma, sigma);
+		ij.op().run(BlurCLIJ.class, output, input, sigma, sigma, sigma);
 		Img _output = (Img) clij.convert(output, RandomAccessibleInterval.class);
 		printDim("CLIJ version buffer output", output);
 		printDim("CLIJ version output", _output);

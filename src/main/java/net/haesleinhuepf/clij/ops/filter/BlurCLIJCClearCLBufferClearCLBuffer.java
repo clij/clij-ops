@@ -24,13 +24,7 @@ public class BlurCLIJCClearCLBufferClearCLBuffer
     public void compute(final ClearCLBuffer input, final ClearCLBuffer output)
     {
         final CLIJ clij = CLIJ.getInstance();
-        int ks = getKernelSize(sigma);
-        Kernels.blur(clij, input, output, ks, ks, ks, sigma, sigma, sigma);
-    }
-
-
-    private int getKernelSize(float sigma) {
-        return 2*Math.max( 2, ( int ) ( 3 * sigma + 0.5 ) + 1 )-1;
+        Kernels.blur(clij, input, output, sigma, sigma, sigma);
     }
 
     @Override
