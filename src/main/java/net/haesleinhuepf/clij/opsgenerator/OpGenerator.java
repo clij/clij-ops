@@ -1,12 +1,19 @@
 package net.haesleinhuepf.clij.opsgenerator;
 
-import java.io.*;
-import java.util.*;
+import net.haesleinhuepf.clij.opsgenerator.properties.BinaryHybridCFProperties;
+import net.haesleinhuepf.clij.opsgenerator.properties.OpProperties;
+import net.haesleinhuepf.clij.opsgenerator.properties.UnaryHybridCFProperties;
+import net.haesleinhuepf.clij.opsgenerator.properties.UnaryFunctionOpProperties;
+import net.haesleinhuepf.clij.opsgenerator.properties.UnaryHybridCFProperties;
 
-import static net.haesleinhuepf.clij.opsgenerator.BinaryComputerOpBuilder.buildBinaryComputerOp;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import static net.haesleinhuepf.clij.opsgenerator.OpInterfaceBuilder.writeInterfaceClass;
-import static net.haesleinhuepf.clij.opsgenerator.UnaryComputerOpBuilder.buildUnaryComputerOp;
-import static net.haesleinhuepf.clij.opsgenerator.UnaryFunctionOpBuilder.buildUnaryFunctionOp;
+import static net.haesleinhuepf.clij.opsgenerator.properties.OpProperties.getMethodName;
 
 /**
  * OpGenerator
@@ -20,17 +27,17 @@ public class OpGenerator {
 
     static String root = "/home/random/Development/imagej/project/clij/clij-ops/src/main/java/net/haesleinhuepf/clij/ops/generated/";
 
-    public final static Map<String, String> primitiveMap = new HashMap<>();
-    static {
-        primitiveMap.put("boolean", "Boolean");
-        primitiveMap.put("byte", "Byte");
-        primitiveMap.put("short", "Short");
-        primitiveMap.put("char", "Character");
-        primitiveMap.put("int", "Integer");
-        primitiveMap.put("long", "Long");
-        primitiveMap.put("float", "Float");
-        primitiveMap.put("double", "Double");
-    }
+//    public final static Map<String, String> primitiveMap = new HashMap<>();
+//    static {
+//        primitiveMap.put("boolean", "Boolean");
+//        primitiveMap.put("byte", "Byte");
+//        primitiveMap.put("short", "Short");
+//        primitiveMap.put("char", "Character");
+//        primitiveMap.put("int", "Integer");
+//        primitiveMap.put("long", "Long");
+//        primitiveMap.put("float", "Float");
+//        primitiveMap.put("double", "Double");
+//    }
 
     public static void main(String ... args) throws IOException {
 
@@ -48,7 +55,7 @@ public class OpGenerator {
         for (int i = 0; i < methods.size(); i++) {
             String methodName = methodNames.get(i);
             int methodCount = Collections.frequency(methodNames, methodName);
-            String namespace = getNamespaceName(methodName);
+            String namespace = OpProperties.getNamespaceName(methodName);
             writeInterfaceClass(namespace);
             for (int j = 0; j < methodCount; j++) {
                 if(processKernelFunction(header, namespace, methods.get(i+j))) opCreated++;
@@ -77,7 +84,8 @@ public class OpGenerator {
         header.append("import net.imagej.ops.Contingent;\n");
         header.append("import net.imagej.ops.Op;\n");
         header.append("import net.imagej.ops.special.computer.AbstractUnaryComputerOp;\n");
-        header.append("import net.imagej.ops.special.computer.AbstractBinaryComputerOp;\n");
+        header.append("import net.imagej.ops.special.hybrid.AbstractUnaryHybridCF;\n");
+        header.append("import net.imagej.ops.special.hybrid.AbstractBinaryHybridCF;\n");
         header.append("import net.imagej.ops.special.function.AbstractUnaryFunctionOp;\n");
         header.append("import net.imglib2.type.numeric.RealType;\n");
         header.append("import org.scijava.plugin.Parameter;\n");
@@ -114,190 +122,94 @@ public class OpGenerator {
 
     private static boolean processKernelFunction(String header, String namespace, String line) throws IOException {
 
-        OpProperties props = new OpProperties();
+        List<String> params = Arrays.asList(OpProperties.getParameterNames(line));
 
-        props.methodName = getMethodName(line);
-        props.parameters = getParameters(line);
-        props.returnType = getReturnType(line);
-        props.namespace = namespace;
-        props.header = header;
-
-        List<String> params = Arrays.asList(getParameterNames(props.parameters));
-
-        String classContent = "";
+        OpProperties props = null;
 
         if(params.contains("src") && params.contains("dst")) {
-            props.src1Parameter = "src";
-            props.dstParameter = "dst";
             if(params.contains("src1")) {
-                props.src2Parameter = "src1";
-                props.className = getBinaryClassName(getComputerClassName(props.methodName), props);
-                classContent = buildBinaryComputerOp(props);
+                props =  new BinaryHybridCFProperties(line, namespace, header);
+                props.src1Parameter = "src";
+                ((BinaryHybridCFProperties)props).src2Parameter = "src1";
+                ((BinaryHybridCFProperties)props).dstParameter = "dst";
+
             }else {
-                props.className = getUnaryClassName(getComputerClassName(props.methodName), props);
-                classContent = buildUnaryComputerOp(props);
+                props =  new UnaryHybridCFProperties(line, namespace, header);
+                props.src1Parameter = "src";
+                ((UnaryHybridCFProperties)props).dstParameter = "dst";
             }
         } else if(!params.contains("src") && params.contains("src1") && params.contains("dst")) {
-            props.src1Parameter = "src1";
-            props.dstParameter = "dst";
             if(params.contains("src2")) {
-                props.src2Parameter = "src2";
-                props.className = getBinaryClassName(getComputerClassName(props.methodName), props);
-                classContent = buildBinaryComputerOp(props);
+                props =  new BinaryHybridCFProperties(line, namespace, header);
+                props.src1Parameter = "src1";
+                ((BinaryHybridCFProperties)props).src2Parameter = "src2";
+                ((BinaryHybridCFProperties)props).dstParameter = "dst";
             }else {
-                props.className = getUnaryClassName(getComputerClassName(props.methodName), props);
-                classContent = buildUnaryComputerOp(props);
+                props =  new UnaryHybridCFProperties(line, namespace, header);
+                props.src1Parameter = "src1";
+                ((UnaryHybridCFProperties)props).dstParameter = "dst";
             }
         } else if(params.contains("clImage") && params.contains("clReducedImage")) {
+            props =  new UnaryHybridCFProperties(line, namespace, header);
             props.src1Parameter = "clImage";
-            props.dstParameter = "clReducedImage";
-            props.className = getUnaryClassName(getComputerClassName(props.methodName), props);
-            classContent = buildUnaryComputerOp(props);
+            ((UnaryHybridCFProperties)props).dstParameter = "clReducedImage";
         } else if(params.contains("src") && params.contains("dst_max")) {
+            props =  new UnaryHybridCFProperties(line, namespace, header);
             props.src1Parameter = "src";
-            props.dstParameter = "dst_max";
-            props.className = getUnaryClassName(getComputerClassName(props.methodName), props);
-            classContent = buildUnaryComputerOp(props);
+            ((UnaryHybridCFProperties)props).dstParameter = "dst_max";
+        } else if(params.contains("src") && params.contains("dstHistogram")) {
+	        props =  new UnaryHybridCFProperties(line, namespace, header);
+	        props.src1Parameter = "src";
+	        ((UnaryHybridCFProperties)props).dstParameter = "dstHistogram";
+        } else if(params.contains("src") && params.contains("dst_min")) {
+	        props =  new UnaryHybridCFProperties(line, namespace, header);
+	        props.src1Parameter = "src";
+	        ((UnaryHybridCFProperties)props).dstParameter = "dst_min";
         } else if(params.contains("input3d") && params.contains("output3d")) {
+            props =  new UnaryHybridCFProperties(line, namespace, header);
             props.src1Parameter = "input3d";
-            props.dstParameter = "output3d";
-            props.className = getUnaryClassName(getComputerClassName(props.methodName), props);
-            classContent = buildUnaryComputerOp(props);
+            ((UnaryHybridCFProperties)props).dstParameter = "output3d";
+        } else if(params.contains("subtrahend") && params.contains("minuend") && params.contains("destination")) {
+            props =  new BinaryHybridCFProperties(line, namespace, header);
+            props.src1Parameter = "subtrahend";
+            ((BinaryHybridCFProperties)props).src2Parameter = "minuend";
+            ((BinaryHybridCFProperties)props).dstParameter = "destination";
         } else if(params.contains("source1") && params.contains("source2") && params.contains("destination")) {
+            props =  new BinaryHybridCFProperties(line, namespace, header);
             props.src1Parameter = "source1";
-            props.src2Parameter = "source2";
-            props.dstParameter = "destination";
-            props.className = getBinaryClassName(getComputerClassName(props.methodName), props);
-            classContent = buildBinaryComputerOp(props);
+            ((BinaryHybridCFProperties)props).src2Parameter = "source2";
+            ((BinaryHybridCFProperties)props).dstParameter = "destination";
         } else if(params.contains("clImage")) {
+            props =  new UnaryFunctionOpProperties(line, namespace, header);
             props.src1Parameter = "clImage";
-            props.className = getUnaryFunctionClassName(getFunctionClassName(props.methodName), props);
-            classContent = buildUnaryFunctionOp(props);
         } else if(params.contains("input")) {
+            props =  new UnaryFunctionOpProperties(line, namespace, header);
             props.src1Parameter = "input";
-            props.className = getUnaryFunctionClassName(getFunctionClassName(props.methodName), props);
-            classContent = buildUnaryFunctionOp(props);
+        } else if(params.contains("image")) {
+            props =  new UnaryFunctionOpProperties(line, namespace, header);
+            props.src1Parameter = "image";
         }
+
         boolean success = true;
-        if(classContent.isEmpty()) {
+        if(props == null) {
             success = false;
-           classContent = "// Could not parse kernel function.\n";
-           props.className = "Failed" + getClassName(props.methodName);
-            System.out.println("Could not parse kernel function " + props.methodName);
+            String method = getMethodName(line);
+            System.out.println("Could not parse kernel function " + method);
+        } else {
+            String classContent = props.build();
+            File outputDir = new File(root + (namespace.isEmpty() ? "" : namespace + "/"));
+            outputDir.mkdirs();
+            File outputTarget = new File(outputDir.getAbsolutePath() + "/"
+                    + props.className + ".java");
+            outputTarget.createNewFile();
+
+            FileWriter writer = new FileWriter(outputTarget);
+            writer.write(classContent);
+            writer.close();
         }
 
-        File outputDir = new File(root + (namespace.isEmpty() ? "" : namespace + "/"));
-        outputDir.mkdirs();
-        File outputTarget = new File(outputDir.getAbsolutePath() + "/"
-                + props.className + ".java");
-        outputTarget.createNewFile();
-
-        FileWriter writer = new FileWriter(outputTarget);
-        writer.write(classContent);
-        writer.close();
         return success;
     }
 
-    static String getParameter(String[] parameters, String srcParameter) {
-        List<String> parameterNames = Arrays.asList(getParameterNames(parameters));
-        return parameters[parameterNames.indexOf(srcParameter)];
-    }
-
-    static String buildParameter(String parameter, String... ignore) {
-        StringBuilder builder = new StringBuilder();
-        String name = getParameterName(parameter);
-        if(Arrays.asList(ignore).contains(name) || name.equals("clij")) return "";
-        builder.append("    @Parameter\n");
-        builder.append("    private " + parameter.trim() + ";\n\n");
-        return builder.toString();
-    }
-
-    static String buildConformFunction() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("    @Override\n");
-        builder.append("    public boolean conforms() {\n");
-        builder.append("        return true;\n");
-        builder.append("    }\n\n");
-        return builder.toString();
-    }
-
-    static String[] getParameterNames(String[] parameters) {
-        String[] res = new String[parameters.length];
-        for (int i = 0; i < res.length; i++) {
-            res[i] = getParameterName(parameters[i]);
-        }
-        return res;
-    }
-
-    static String getParameterName(String parameter) {
-        return parameter.trim().split(" ")[1];
-    }
-
-    static String getParameterClass(String parameter) {
-        String className = parameter.trim().split(" ")[0];
-        if(primitiveMap.containsKey(className)) return primitiveMap.get(className);
-        else return className;
-    }
-
-    static String getReturnType(String line) {
-        String[] temp = line.split("\\(");
-        temp = temp[0].trim().split(" ");
-        String className = temp[temp.length - 2];
-        if(primitiveMap.containsKey(className)) return primitiveMap.get(className);
-        else return className;
-    }
-
-    static String getClassName(String methodName) {
-        if(methodName.isEmpty()) return "";
-        return methodName.substring(0,1).toUpperCase() + methodName.substring(1);
-    }
-
-    static String getNamespaceName(String methodName) {
-        return methodName + "CLIJ";
-    }
-
-    static String getComputerClassName(String methodName) {
-        return getClassName(methodName) + "CLIJC";
-    }
-
-    static String getFunctionClassName(String methodName) {
-        return getClassName(methodName) + "CLIJF";
-    }
-
-    static String getUnaryClassName(String className, OpProperties props) {
-        String srcClass = getParameterClass(getParameter(props.parameters, props.src1Parameter));
-        String dstClass = getParameterClass(getParameter(props.parameters, props.dstParameter));
-        return className + srcClass + dstClass;
-    }
-
-    static String getUnaryFunctionClassName(String className, OpProperties props) {
-        String srcClass = getParameterClass(getParameter(props.parameters, props.src1Parameter));
-        return className + srcClass;
-    }
-
-    static String getBinaryClassName(String className, OpProperties props) {
-        String src1Class = getParameterClass(getParameter(props.parameters, props.src1Parameter));
-        String src2Class = getParameterClass(getParameter(props.parameters, props.src2Parameter));
-        String dstClass = getParameterClass(getParameter(props.parameters, props.dstParameter));
-        return className + src1Class + src2Class + dstClass;
-    }
-
-    static String getMethodName(String line) {
-        String[] temp = line.split("\\(");
-        temp = temp[0].trim().split(" ");
-        return temp[temp.length - 1];
-    }
-
-    static String[] getParameters(String line) {
-        String[] temp = line.split("\\(");
-        String parameters = temp[1].trim();
-        parameters = parameters.replace(")", "");
-        return parameters.replace("{", "").split(",");
-    }
-
-    static String getOpDep(String namespaceClass) {
-        if(namespaceClass.isEmpty()) return "Op";
-        return namespaceClass;
-    }
 
 }

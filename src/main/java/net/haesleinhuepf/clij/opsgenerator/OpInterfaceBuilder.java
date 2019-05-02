@@ -1,20 +1,18 @@
 package net.haesleinhuepf.clij.opsgenerator;
 
-import net.imagej.ops.Op;
+import net.haesleinhuepf.clij.opsgenerator.properties.OpProperties;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static net.haesleinhuepf.clij.opsgenerator.OpGenerator.getClassName;
-
 public class OpInterfaceBuilder {
 
 	static void writeInterfaceClass(String namespace) throws IOException {
 
-		String namespaceClass = getClassName(namespace);
+		String namespaceClass = OpProperties.getClassName(namespace);
 
-		System.out.println("creating namespace " + namespace);
+//		System.out.println("creating namespace " + namespace);
 
 		File namespaceFolder = new File("/home/random/Development/imagej/project/"
 				+ "clij/clij-ops/src/main/java/net/haesleinhuepf/clij/ops/generated/"

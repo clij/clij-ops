@@ -2,7 +2,7 @@ package net.haesleinhuepf.clij.ops.math;
 
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.ops.CLIJOpsTest;
-import net.haesleinhuepf.clij.ops.generated.addImagesWeightedCLIJ.AddImagesWeightedCLIJ;
+import net.haesleinhuepf.clij.ops.reviewed.addImagesWeightedCLIJ.AddImagesWeightedCLIJ;
 import net.imglib2.IterableInterval;
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.real.FloatType;

@@ -2,7 +2,7 @@ package net.haesleinhuepf.clij.ops;
 
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
-import net.haesleinhuepf.clij.ops.generated.absoluteCLIJ.AbsoluteCLIJ;
+import net.haesleinhuepf.clij.ops.reviewed.absoluteCLIJ.AbsoluteCLIJ;
 import net.imagej.ImageJ;
 import net.imglib2.FinalDimensions;
 import net.imglib2.img.Img;

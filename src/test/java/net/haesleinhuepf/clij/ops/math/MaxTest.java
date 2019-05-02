@@ -2,12 +2,9 @@ package net.haesleinhuepf.clij.ops.math;
 
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.ops.CLIJOpsTest;
-import net.haesleinhuepf.clij.ops.generated.addImageAndScalarCLIJ.AddImageAndScalarCLIJ;
-import net.haesleinhuepf.clij.ops.generated.maximumImageAndScalarCLIJ.MaximumImageAndScalarCLIJ;
-import net.imglib2.IterableInterval;
+import net.haesleinhuepf.clij.ops.reviewed.maximumImageAndScalarCLIJ.MaximumImageAndScalarCLIJ;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
-import net.imglib2.type.numeric.real.FloatType;
 import org.junit.Test;
 
 /*

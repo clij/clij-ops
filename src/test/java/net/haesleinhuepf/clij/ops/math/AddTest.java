@@ -2,7 +2,7 @@ package net.haesleinhuepf.clij.ops.math;
 
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.ops.CLIJOpsTest;
-import net.haesleinhuepf.clij.ops.generated.addImageAndScalarCLIJ.AddImageAndScalarCLIJ;
+import net.haesleinhuepf.clij.ops.reviewed.addImageAndScalarCLIJ.AddImageAndScalarCLIJ;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;

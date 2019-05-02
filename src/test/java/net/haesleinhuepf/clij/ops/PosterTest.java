@@ -2,9 +2,9 @@ package net.haesleinhuepf.clij.ops;
 
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
-import net.haesleinhuepf.clij.ops.generated.addImageAndScalarCLIJ.AddImageAndScalarCLIJ;
-import net.haesleinhuepf.clij.ops.generated.blurCLIJ.BlurCLIJ;
-import net.haesleinhuepf.clij.ops.generated.meanBoxCLIJ.MeanBoxCLIJ;
+import net.haesleinhuepf.clij.ops.reviewed.addImageAndScalarCLIJ.AddImageAndScalarCLIJ;
+import net.haesleinhuepf.clij.ops.reviewed.blurCLIJ.BlurCLIJ;
+import net.haesleinhuepf.clij.ops.reviewed.meanBoxCLIJ.MeanBoxCLIJ;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.neighborhood.HyperSphereShape;
