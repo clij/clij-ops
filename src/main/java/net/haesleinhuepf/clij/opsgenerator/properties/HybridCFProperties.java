@@ -1,3 +1,4 @@
+
 package net.haesleinhuepf.clij.opsgenerator.properties;
 
 public abstract class HybridCFProperties extends OpProperties {
@@ -9,6 +10,6 @@ public abstract class HybridCFProperties extends OpProperties {
 	}
 
 	public String getClassName() {
-		return super.getClassName() + "CLIJ_HCF";
+		return super.getClassName() + "HCF";
 	}
 }

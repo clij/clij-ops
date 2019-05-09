@@ -1,3 +1,4 @@
+
 package net.haesleinhuepf.clij.opsgenerator.properties;
 
 public abstract class ComputerOpProperties extends OpProperties {
@@ -9,6 +10,6 @@ public abstract class ComputerOpProperties extends OpProperties {
 	}
 
 	public String getClassName() {
-		return super.getClassName() + "CLIJC";
+		return super.getClassName() + "C";
 	}
 }

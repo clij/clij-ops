@@ -1,3 +1,4 @@
+
 package net.haesleinhuepf.clij.opsgenerator.properties;
 
 import java.util.Arrays;
@@ -6,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class OpProperties {
+
 	public String methodName;
 	public String className;
 	public String namespace;
@@ -68,7 +70,7 @@ public abstract class OpProperties {
 
 	static String getParameterClass(String parameter) {
 		String className = parameter.trim().split(" ")[0];
-		if(primitiveMap.containsKey(className)) return primitiveMap.get(className);
+		if (primitiveMap.containsKey(className)) return primitiveMap.get(className);
 		else return className;
 	}
 
@@ -77,12 +79,12 @@ public abstract class OpProperties {
 	}
 
 	public static String getClassName(String name) {
-        if(name.isEmpty()) return "";
-        return name.substring(0,1).toUpperCase() + name.substring(1);
-    }
+		if (name.isEmpty()) return "";
+		return "CLIJ_" + name.substring(0, 1).toUpperCase() + name.substring(1);
+	}
 
 	public static String getNamespaceName(String methodName) {
-		return methodName + "CLIJ";
+		return "CLIJ_" + methodName;
 	}
 
 	private String getNamespaceName() {
@@ -90,7 +92,7 @@ public abstract class OpProperties {
 	}
 
 	static String getOpDep(String namespaceClass) {
-		if(namespaceClass.isEmpty()) return "Op";
+		if (namespaceClass.isEmpty()) return "Op";
 		return namespaceClass;
 	}
 
@@ -106,21 +108,21 @@ public abstract class OpProperties {
 	}
 
 	protected String buildHeader() {
-		return "package net.haesleinhuepf.clij.ops.generated"
-				+ (getClassName(namespace).isEmpty() ? "" : "." + namespace) + ";\n"
-				+ header;
+		return "package net.haesleinhuepf.clij.ops.generated" + (getClassName(
+			namespace).isEmpty() ? "" : "." + namespace) + ";\n" + header;
 	}
 
 	protected String buildAnnotation() {
-		return "\n\n@Plugin(type = " + getOpDep(getClassName(namespace)) + ".class)\n";
+		return "\n\n@Plugin(type = " + getOpDep(getClassName(namespace)) +
+			".class)\n";
 	}
 
 	static String buildParameter(String parameter, String... ignore) {
-        StringBuilder builder = new StringBuilder();
-        String name = getParameterName(parameter);
-        if(Arrays.asList(ignore).contains(name) || name.equals("clij")) return "";
-        builder.append("    @Parameter\n");
-        builder.append("    private " + parameter.trim() + ";\n\n");
-        return builder.toString();
-    }
+		StringBuilder builder = new StringBuilder();
+		String name = getParameterName(parameter);
+		if (Arrays.asList(ignore).contains(name) || name.equals("clij")) return "";
+		builder.append("    @Parameter\n");
+		builder.append("    private " + parameter.trim() + ";\n\n");
+		return builder.toString();
+	}
 }
