@@ -1,13 +1,15 @@
+
 package net.haesleinhuepf.clij.ops.math;
+
+import org.junit.Test;
 
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.ops.CLIJOpsTest;
-import net.haesleinhuepf.clij.ops.reviewed.addImageAndScalarCLIJ.AddImageAndScalarCLIJ;
+import net.haesleinhuepf.clij.ops.CLIJ_addImageAndScalar.CLIJ_addImageAndScalar;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.real.FloatType;
-import org.junit.Test;
 
 /*
  * Compares op.math().add() with CLIJ_addImageAndScalar
@@ -24,13 +26,15 @@ public class AddTest extends CLIJOpsTest {
 			long timeOpStart = System.currentTimeMillis();
 			runOpVersion(input);
 			long timeOpEnd = System.currentTimeMillis();
-			System.out.println("ImageJ2 Op version took " + (timeOpEnd - timeOpStart) + " ms");
+			System.out.println("ImageJ2 Op version took " + (timeOpEnd -
+				timeOpStart) + " ms");
 		}
 		for (int i = 0; i < runs; i++) {
 			long timeOpCLIJStart = System.currentTimeMillis();
 			runOpCLIJVersion(input);
 			long timeOpCLIJEnd = System.currentTimeMillis();
-			System.out.println("ImageJ2 CLIJ Op version took " + (timeOpCLIJEnd - timeOpCLIJStart) + " ms");
+			System.out.println("ImageJ2 CLIJ Op version took " + (timeOpCLIJEnd -
+				timeOpCLIJStart) + " ms");
 		}
 	}
 
@@ -47,10 +51,12 @@ public class AddTest extends CLIJOpsTest {
 		ClearCLBuffer output = clij.create(input);
 		printDim("CLIJ version input", _imginput);
 		printDim("CLIJ version buffer  input", input);
-		ij.op().run(AddImageAndScalarCLIJ.class, output, input, addValue);
+		ij.op().run(CLIJ_addImageAndScalar.class, output, input, addValue);
 		Img _output = (Img) clij.convert(output, RandomAccessibleInterval.class);
 		printDim("CLIJ version buffer output", output);
 		printDim("CLIJ version output", _output);
+		input.close();
+		output.close();
 		return _output;
 
 	}
@@ -60,7 +66,7 @@ public class AddTest extends CLIJOpsTest {
 		Img output = input.copy();
 		FloatType value = new FloatType(addValue);
 		printDim("op version input", input);
-		ij.op().math().add((IterableInterval)output, input, value);
+		ij.op().math().add((IterableInterval) output, input, value);
 		printDim("op version output", output);
 		return output;
 	}

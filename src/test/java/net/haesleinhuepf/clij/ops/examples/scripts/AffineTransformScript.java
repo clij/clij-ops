@@ -1,24 +1,30 @@
+
 package net.haesleinhuepf.clij.ops.examples.scripts;
 
-import ij.ImagePlus;
-import net.imagej.ImageJ;
-import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgs;
-import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.type.numeric.integer.ShortType;
-
-import javax.script.ScriptException;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import javax.script.ScriptException;
+
+import org.junit.Test;
+
+import net.imagej.ImageJ;
+
 public class AffineTransformScript {
-	public static void main(String... args) throws FileNotFoundException, ScriptException {
-		// start ImageJ
+
+	public static void main(String... args) throws FileNotFoundException,
+		ScriptException
+	{
+		new AffineTransformScript().run();
+	}
+
+	@Test
+	public void run() throws FileNotFoundException, ScriptException {
 		ImageJ ij = new ImageJ();
 		ij.ui().showUI();
 
-		ij.script().run(new File("/home/random/Development/imagej/project/clij/clij-ops/src/test/jython/affineTransform.py"),
-				false, new Object[]{"ops", ij.op(), "ui", ij.ui(), "io", ij.io()});
+		ij.script().run(new File(getClass().getResource("/jython/affineTransform.py").getPath()),
+				false, new Object[] { "ops", ij.op(), "ui", ij.ui(), "io", ij.io() });
 
 	}
 }

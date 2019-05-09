@@ -29,11 +29,22 @@
 
 package net.imagej.ops;
 
+import static org.junit.Assert.*;
+
+import java.math.BigInteger;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.Random;
+import java.util.stream.StreamSupport;
+
+import org.junit.After;
+import org.junit.Before;
+import org.scijava.Context;
+import org.scijava.cache.CacheService;
+import org.scijava.plugin.Parameter;
+import org.scijava.util.MersenneTwisterFast;
+
 import io.scif.img.IO;
-import net.imagej.ops.AbstractOp;
-import net.imagej.ops.Op;
-import net.imagej.ops.OpMatchingService;
-import net.imagej.ops.OpService;
 import net.imagej.types.UnboundedIntegerType;
 import net.imglib2.*;
 import net.imglib2.img.Img;
@@ -51,20 +62,6 @@ import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
-import org.junit.After;
-import org.junit.Before;
-import org.scijava.Context;
-import org.scijava.cache.CacheService;
-import org.scijava.plugin.Parameter;
-import org.scijava.util.MersenneTwisterFast;
-
-import java.math.BigInteger;
-import java.net.URL;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.stream.StreamSupport;
-
-import static org.junit.Assert.*;
 
 /**
  * Base class for {@link Op} unit testing.
@@ -375,7 +372,8 @@ public abstract class AbstractOpTest {
 		if (fill) {
 			seed = 17;
 			for (int i = 0; i < array.length; i++) {
-				array[i] = (long) (((pseudoRandom() / Integer.MAX_VALUE)) % (Math.pow(2, nbits))) ;
+				array[i] = (long) (((pseudoRandom() / Integer.MAX_VALUE)) % (Math.pow(2,
+					nbits)));
 			}
 		}
 

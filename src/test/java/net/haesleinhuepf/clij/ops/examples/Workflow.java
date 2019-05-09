@@ -1,20 +1,20 @@
+
 package net.haesleinhuepf.clij.ops.examples;
 
-import net.haesleinhuepf.clij.CLIJ;
-import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
-import net.haesleinhuepf.clij.ops.reviewed.addImagesWeightedCLIJ.AddImagesWeightedCLIJ;
-import net.haesleinhuepf.clij.ops.reviewed.blurCLIJ.BlurCLIJ;
-import net.haesleinhuepf.clij.ops.reviewed.filter.reslice.ResliceLeftCLIJ;
-import net.haesleinhuepf.clij.ops.reviewed.filter.reslice.ResliceTopCLIJ;
-import net.haesleinhuepf.clij.ops.reviewed.maxProjection.MaximumZProjectionCLIJ;
-import net.haesleinhuepf.clij.ops.reviewed.maximumImageAndScalarCLIJ.MaximumImageAndScalarCLIJ;
-import net.haesleinhuepf.clij.ops.reviewed.radialProjection.RadialProjectionCLIJ;
-import net.haesleinhuepf.clij.ops.reviewed.transform.downsample.DownsampleCLIJ;
-import net.imagej.ImageJ;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.Img;
-
 import java.io.IOException;
+
+import org.junit.Test;
+
+import net.haesleinhuepf.clij.ops.CLIJ_addImagesWeighted.CLIJ_addImagesWeighted;
+import net.haesleinhuepf.clij.ops.CLIJ_blur.CLIJ_blur;
+import net.haesleinhuepf.clij.ops.CLIJ_close.CLIJ_close;
+import net.haesleinhuepf.clij.ops.CLIJ_maxProjection.CLIJ_maximumZProjection;
+import net.haesleinhuepf.clij.ops.CLIJ_maximumImageAndScalar.CLIJ_maximumImageAndScalar;
+import net.haesleinhuepf.clij.ops.CLIJ_pull.CLIJ_pull;
+import net.haesleinhuepf.clij.ops.CLIJ_push.CLIJ_push;
+import net.haesleinhuepf.clij.ops.CLIJ_radialProjection.CLIJ_radialProjection;
+import net.imagej.ImageJ;
+import net.imglib2.img.Img;
 
 public class Workflow {
 
@@ -24,29 +24,53 @@ public class Workflow {
 	static double sampleY = 0.52;
 	static double sampleZ = 2.0;
 
+	@Test
 	public void run() throws IOException {
 		ImageJ ij = new ImageJ();
-		Img blobs = (Img) ij.io().open("https://imagej.nih.gov/ij/images/blobs.gif");
+		Img blobs = (Img) ij.io().open("https://bds.mpi-cbg.de/samples/blobs.png");
+		ij.ui().show("input", blobs);
 		Img imginput = ij.op().convert().float32(blobs);
-		// init GPU
-		//		CLIJ clij = CLIJ.getInstance("Intel(R) HD Graphics Kabylake Desktop GT1.5");
-		CLIJ clij = CLIJ.getInstance();
 
-		ClearCLBuffer original = clij.convert(imginput, ClearCLBuffer.class);
+		Object original = ij.op().run(CLIJ_push.class, imginput);
 
-		ClearCLBuffer firstFiltered = (ClearCLBuffer) ij.op().run("blurCLIJ", original, smallBlurSigmaInPixels, smallBlurSigmaInPixels, 0);
-		ClearCLBuffer secondFiltered = (ClearCLBuffer) ij.op().run(BlurCLIJ.class, original, blurSigmaInPixels, blurSigmaInPixels, 0);
-		ClearCLBuffer imageDoG = (ClearCLBuffer) ij.op().run(AddImagesWeightedCLIJ.class, firstFiltered, secondFiltered, 1.0, -1.0);
-		ClearCLBuffer positiveStack = (ClearCLBuffer) ij.op().run(MaximumImageAndScalarCLIJ.class, imageDoG, 1.0);
-		ClearCLBuffer scaled = (ClearCLBuffer) ij.op().run(DownsampleCLIJ.class, positiveStack, sampleX, sampleY, sampleZ);
-		ClearCLBuffer reslicedFromTop = (ClearCLBuffer) ij.op().run(ResliceTopCLIJ.class, scaled);
-		ClearCLBuffer radialResliced = (ClearCLBuffer) ij.op().run(RadialProjectionCLIJ.class, reslicedFromTop, 360, 1.0);
-		ClearCLBuffer reslicedFromLeft = (ClearCLBuffer) ij.op().run(ResliceLeftCLIJ.class, radialResliced);
-		ClearCLBuffer maxProjected = (ClearCLBuffer) ij.op().run(MaximumZProjectionCLIJ.class, reslicedFromLeft);
-		ij.ui().show(clij.convert(maxProjected, RandomAccessibleInterval.class));
+		Object firstFiltered = ij.op().run("CLIJ_blur", original,
+			smallBlurSigmaInPixels, smallBlurSigmaInPixels, 0);
+		Object secondFiltered = ij.op().run(CLIJ_blur.class, original,
+			blurSigmaInPixels, blurSigmaInPixels, 0);
+		Object imageDoG = ij.op().run(CLIJ_addImagesWeighted.class, firstFiltered,
+			secondFiltered, 1.0, -1.0);
+		Object positiveStack = ij.op().run(CLIJ_maximumImageAndScalar.class,
+			imageDoG, 1.0);
+		Object scaled = ij.op().run(
+			net.haesleinhuepf.clij.ops.transform.downsample.CLIJ_downsample.class,
+			positiveStack, sampleX, sampleY, sampleZ);
+		Object reslicedFromTop = ij.op().run(
+			net.haesleinhuepf.clij.ops.filter.reslice.CLIJ_resliceTop.class, scaled);
+		Object radialResliced = ij.op().run(CLIJ_radialProjection.class,
+			reslicedFromTop, 360, 1.0);
+		Object reslicedFromLeft = ij.op().run(
+			net.haesleinhuepf.clij.ops.filter.reslice.CLIJ_resliceLeft.class,
+			radialResliced);
+		Object maxProjected = ij.op().run(CLIJ_maximumZProjection.class,
+			reslicedFromLeft);
+		Object result = ij.op().run(CLIJ_pull.class, maxProjected);
+		ij.ui().show("workflow result", result);
+
+		// cleanup
+		ij.op().run(CLIJ_close.class, original);
+		ij.op().run(CLIJ_close.class, secondFiltered);
+		ij.op().run(CLIJ_close.class, imageDoG);
+		ij.op().run(CLIJ_close.class, positiveStack);
+		ij.op().run(CLIJ_close.class, scaled);
+		ij.op().run(CLIJ_close.class, reslicedFromTop);
+		ij.op().run(CLIJ_close.class, reslicedFromLeft);
+		ij.op().run(CLIJ_close.class, radialResliced);
+		ij.op().run(CLIJ_close.class, maxProjected);
+		ij.op().run(CLIJ_close.class);
+
 	}
 
-	public static void main(String ... args) throws IOException {
+	public static void main(String... args) throws IOException {
 		Workflow task = new Workflow();
 		task.run();
 	}

@@ -1,19 +1,29 @@
+
 package net.haesleinhuepf.clij.ops.examples.scripts;
 
-import net.imagej.ImageJ;
-
-import javax.script.ScriptException;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import javax.script.ScriptException;
+
+import org.junit.Test;
+
+import net.imagej.ImageJ;
+
 public class AutomaticThresholdScript {
-	public static void main(String... args) throws FileNotFoundException, ScriptException {
-		// start ImageJ
+
+	public static void main(String... args) throws FileNotFoundException,
+			ScriptException
+	{
+		new AutomaticThresholdScript().run();
+	}
+
+	@Test
+	public void run() throws FileNotFoundException, ScriptException {
 		ImageJ ij = new ImageJ();
 		ij.ui().showUI();
 
-		ij.script().run(new File("/home/random/Development/imagej/project/clij/clij-ops/src/test/jython/autoThreshold.py"),
-				false, new Object[]{"ops", ij.op(), "ui", ij.ui(), "io", ij.io()});
-
+		ij.script().run(new File(getClass().getResource("/jython/autoThreshold.py").getPath()),
+				false, new Object[] { "ops", ij.op(), "ui", ij.ui(), "io", ij.io() });
 	}
 }
