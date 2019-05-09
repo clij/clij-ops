@@ -14,7 +14,7 @@
 
 	<groupId>net.haesleinhuepf</groupId>
 	<artifactId>clij-ops</artifactId>
-	<version>0.3.0</version>
+	<version>0.4.0-SNAPSHOT</version>
 
 	<name>CLIJ Ops</name>
 	<description>CLIJ Interface to utilize ImageJ Ops</description>
@@ -93,8 +93,11 @@
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-ops</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej-legacy</artifactId>
+		</dependency>
 	</dependencies>
-
 
 	<repositories>
 		<repository>
@@ -102,5 +105,43 @@
 			<url>http://dl.bintray.com/haesleinhuepf/clij</url>
 		</repository>
 	</repositories>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>net.revelc.code.formatter</groupId>
+				<artifactId>formatter-maven-plugin</artifactId>
+				<version>2.7.3</version>
+				<configuration>
+					<configFile>${project.basedir}/.formatter/java-imagej-coding-style.xml</configFile>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>format</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>net.revelc.code</groupId>
+				<artifactId>impsort-maven-plugin</artifactId>
+				<version>1.2.0</version>
+				<configuration>
+					<groups>java.,javax.,org.,com.</groups>
+					<staticGroups>java,*</staticGroups>
+					<removeUnused>true</removeUnused>
+				</configuration>
+				<executions>
+					<execution>
+						<id>sort-imports</id>
+						<goals>
+							<goal>sort</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>
