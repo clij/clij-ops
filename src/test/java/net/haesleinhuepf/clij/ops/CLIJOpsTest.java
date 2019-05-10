@@ -21,7 +21,7 @@ public abstract class CLIJOpsTest {
 		return createAscendingImage(new FinalDimensions(10, 20, 30));
 	}
 
-	protected Img createAscendingImage(Dimensions dims) {
+	public Img createAscendingImage(Dimensions dims) {
 		Img img = ij.op().create().img(dims, new FloatType());
 		Cursor<FloatType> cursor = img.localizingCursor();
 		int pix = 0;
@@ -33,12 +33,12 @@ public abstract class CLIJOpsTest {
 		return img;
 	}
 
-	protected static void compare(Img img1, Img img2) {
+	public static void compare(Img img1, Img img2) {
 		compareDimensions(img1, img2);
 		compareValues(img1, img2);
 	}
 
-	protected static void compareValues(Img img1, Img img2) {
+	public static void compareValues(Img img1, Img img2) {
 		RandomAccess<FloatType> ra = img1.randomAccess();
 		Cursor<FloatType> cursor = img2.cursor();
 		cursor.reset();
@@ -53,7 +53,7 @@ public abstract class CLIJOpsTest {
 		}
 	}
 
-	protected static void compareDimensions(Img img1, Img img2) {
+	public static void compareDimensions(Img img1, Img img2) {
 		long[] img1Dims = new long[img1.numDimensions()];
 		img1.dimensions(img1Dims);
 		long[] img2Dims = new long[img2.numDimensions()];
@@ -63,7 +63,7 @@ public abstract class CLIJOpsTest {
 		}
 	}
 
-	protected static void printImg(String name, Img input) {
+	public static void printImg(String name, Img input) {
 		Cursor cursor = input.cursor();
 		while (cursor.hasNext()) {
 			cursor.next();
@@ -71,13 +71,13 @@ public abstract class CLIJOpsTest {
 		}
 	}
 
-	protected static void printDim(String name, RandomAccessibleInterval input) {
+	public static void printDim(String name, RandomAccessibleInterval input) {
 		long[] imgDims = new long[input.numDimensions()];
 		input.dimensions(imgDims);
 		System.out.println(name + ": " + Arrays.toString(imgDims));
 	}
 
-	protected static void printDim(String name, ClearCLBuffer input) {
+	public static void printDim(String name, ClearCLBuffer input) {
 		System.out.println(name + ": " + Arrays.toString(input.getDimensions()));
 	}
 

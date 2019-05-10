@@ -43,8 +43,7 @@ public class ApplyVectorfield2DHCFClearCLBufferClearCLBuffer extends
 
 	@Override
 	public ClearCLBuffer createOutput(ClearCLBuffer input) {
-		CLIJ clij = CLIJ.getInstance();
-		return clij.create(input);
+		return clij.get().create(input);
 	}
 
 }

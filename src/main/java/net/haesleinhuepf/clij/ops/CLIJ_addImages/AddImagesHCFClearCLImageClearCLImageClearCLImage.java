@@ -39,8 +39,7 @@ public class AddImagesHCFClearCLImageClearCLImageClearCLImage extends
 
 	@Override
 	public ClearCLImage createOutput(ClearCLImage input1, ClearCLImage input2) {
-		CLIJ clij = CLIJ.getInstance();
-		return clij.create(input1);
+		return clij.get().create(input1);
 	}
 
 }

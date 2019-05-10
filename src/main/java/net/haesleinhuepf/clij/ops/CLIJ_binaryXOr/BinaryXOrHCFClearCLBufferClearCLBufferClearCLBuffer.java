@@ -41,8 +41,7 @@ public class BinaryXOrHCFClearCLBufferClearCLBufferClearCLBuffer extends
 	public ClearCLBuffer createOutput(ClearCLBuffer input1,
 		ClearCLBuffer input2)
 	{
-		CLIJ clij = CLIJ.getInstance();
-		return clij.create(input1);
+		return clij.get().create(input1);
 	}
 
 }

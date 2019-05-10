@@ -38,8 +38,7 @@ public class ConvertUInt16HCFClearCLBufferClearCLBuffer extends
 
 	@Override
 	public ClearCLBuffer createOutput(ClearCLBuffer input) {
-		CLIJ clij = CLIJ.getInstance();
-		return clij.create(input.getDimensions(), NativeTypeEnum.UnsignedShort);
+		return clij.get().create(input.getDimensions(), NativeTypeEnum.UnsignedShort);
 	}
 
 }

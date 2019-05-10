@@ -3,6 +3,7 @@ package net.haesleinhuepf.clij.ops.examples;
 
 import java.io.IOException;
 
+import net.haesleinhuepf.clij.CLIJService;
 import org.junit.Test;
 
 import net.haesleinhuepf.clij.CLIJ;
@@ -26,8 +27,7 @@ public class AffineTransform {
 
 		// to use a specific GPU version, uncomment the following line and insert
 		// your GPU name
-		// ij.get(CLIJService.class).get("Intel(R) HD Graphics Kabylake Desktop
-		// GT1.5");
+//		 ij.get(CLIJService.class).get("Intel(R) HD Graphics Kabylake Desktop GT1.5");
 
 		Object blobsGPU = ij.op().run(CLIJ_push.class, blobs32);
 

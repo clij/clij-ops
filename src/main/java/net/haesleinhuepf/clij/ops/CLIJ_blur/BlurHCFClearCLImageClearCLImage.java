@@ -46,8 +46,7 @@ public class BlurHCFClearCLImageClearCLImage extends
 
 	@Override
 	public ClearCLImage createOutput(ClearCLImage input) {
-		CLIJ clij = CLIJ.getInstance();
-		return clij.create(input);
+		return clij.get().create(input);
 	}
 
 }

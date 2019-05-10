@@ -1,6 +1,7 @@
 
 package net.haesleinhuepf.clij.ops.CLIJ_create;
 
+import net.haesleinhuepf.clij.CLIJService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
@@ -25,6 +26,9 @@ public class CreateFClearCLBuffer extends
 	@Parameter
 	private NativeTypeEnum type;
 
+	@Parameter
+	private CLIJService clij;
+
 	@Override
 	public boolean conforms() {
 		return true;
@@ -32,7 +36,6 @@ public class CreateFClearCLBuffer extends
 
 	@Override
 	public ClearCLBuffer calculate() {
-		CLIJ clij = CLIJ.getInstance();
-		return clij.create(dimensions, type);
+		return clij.get().create(dimensions, type);
 	}
 }
