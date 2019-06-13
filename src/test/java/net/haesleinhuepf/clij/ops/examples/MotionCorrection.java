@@ -84,7 +84,7 @@ public class MotionCorrection {
 
 		// cleanup
 		ij.op().run(CLIJ_close.class, inputGPU);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

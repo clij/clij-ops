@@ -30,4 +30,4 @@ ui.show("rotated", result)
 #cleanup
 ops.run("CLIJ_close", inputGPU)
 ops.run("CLIJ_close", rotated)
-ops.run("CLIJ_close")
+

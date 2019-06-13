@@ -41,4 +41,4 @@ ui.show("freely rotated", result)
 ops.run("CLIJ_close", blobsGPU)
 ops.run("CLIJ_close", targetGPU)
 ops.run("CLIJ_close", rotated)
-ops.run("CLIJ_close")
+

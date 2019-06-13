@@ -35,4 +35,4 @@ ops.run("CLIJ_close", inputGPU)
 ops.run("CLIJ_close", background)
 ops.run("CLIJ_close", background_subtracted)
 ops.run("CLIJ_close", maximum_projected)
-ops.run("CLIJ_close")
+

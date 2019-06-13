@@ -26,4 +26,3 @@ blurred = ops.run("CLIJ_blur", inputGPU, 5, 5, 1)
 # show result
 result = ops.run("CLIJ_pull", blurred)
 ui.show("blurred", result)
-ops.run("CLIJ_close")

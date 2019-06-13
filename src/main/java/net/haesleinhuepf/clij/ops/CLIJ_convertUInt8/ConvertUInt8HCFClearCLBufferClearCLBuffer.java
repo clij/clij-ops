@@ -4,7 +4,6 @@ package net.haesleinhuepf.clij.ops.CLIJ_convertUInt8;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.CLIJService;
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.coremem.enums.NativeTypeEnum;
@@ -38,7 +37,8 @@ public class ConvertUInt8HCFClearCLBufferClearCLBuffer extends
 
 	@Override
 	public ClearCLBuffer createOutput(ClearCLBuffer input) {
-		return clij.get().create(input.getDimensions(), NativeTypeEnum.UnsignedByte);
+		return clij.get().create(input.getDimensions(),
+			NativeTypeEnum.UnsignedByte);
 	}
 
 }

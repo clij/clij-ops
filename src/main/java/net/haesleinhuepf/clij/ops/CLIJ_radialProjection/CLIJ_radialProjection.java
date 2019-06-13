@@ -5,5 +5,5 @@ import net.imagej.ops.Op;
 
 public interface CLIJ_radialProjection extends Op {
 
-	String NAME = "radialProjectionCLIJ";
+	String NAME = "CLIJ_radialProjection";
 }

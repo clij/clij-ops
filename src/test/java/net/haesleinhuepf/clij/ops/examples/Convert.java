@@ -35,7 +35,7 @@ public class Convert {
 		ij.op().run(CLIJ_close.class, blobsFloat);
 		ij.op().run(CLIJ_close.class, blobsUInt8);
 		ij.op().run(CLIJ_close.class, blobsUInt16);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

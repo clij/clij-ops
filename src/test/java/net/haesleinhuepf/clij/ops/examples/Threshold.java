@@ -30,7 +30,7 @@ public class Threshold {
 		// cleanup
 		ij.op().run(CLIJ_close.class, blobsGPU);
 		ij.op().run(CLIJ_close.class, maskGPU);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

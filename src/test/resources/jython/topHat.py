@@ -38,4 +38,4 @@ ops.run("CLIJ_close", median)
 ops.run("CLIJ_close", temp1)
 ops.run("CLIJ_close", temp2)
 ops.run("CLIJ_close", output)
-ops.run("CLIJ_close")
+

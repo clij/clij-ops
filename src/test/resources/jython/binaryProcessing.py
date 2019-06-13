@@ -30,4 +30,4 @@ ui.show("binary processing", result)
 inputGPU.close()
 mask.close()
 temp.close()
-ops.run("CLIJ_close")
+

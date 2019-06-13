@@ -30,7 +30,7 @@ public class Blur {
 		// cleanup
 		ij.op().run(CLIJ_close.class, inputGPU);
 		ij.op().run(CLIJ_close.class, blurred);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

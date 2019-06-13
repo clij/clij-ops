@@ -51,4 +51,4 @@ ui.show("3D projected", result)
 ops.run("CLIJ_close", inputGPU)
 ops.run("CLIJ_close", targetGPU)
 ops.run("CLIJ_close", translated)
-ops.run("CLIJ_close")
+

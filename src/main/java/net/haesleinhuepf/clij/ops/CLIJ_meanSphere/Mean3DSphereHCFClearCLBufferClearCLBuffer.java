@@ -6,7 +6,6 @@ import static net.haesleinhuepf.clij.utilities.CLIJUtilities.radiusToKernelSize;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.CLIJService;
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.kernels.Kernels;

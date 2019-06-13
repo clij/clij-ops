@@ -38,7 +38,7 @@ public class BinaryProcessing {
 		ij.op().run(CLIJ_close.class, inputGPU);
 		ij.op().run(CLIJ_close.class, mask);
 		ij.op().run(CLIJ_close.class, temp);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

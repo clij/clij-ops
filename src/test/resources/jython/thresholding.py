@@ -26,4 +26,4 @@ ui.show("threshold", result)
 #cleanup
 ops.run("CLIJ_close", blobsGPU)
 ops.run("CLIJ_close", maskGPU)
-ops.run("CLIJ_close")
+

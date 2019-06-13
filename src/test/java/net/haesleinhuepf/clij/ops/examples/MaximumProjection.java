@@ -31,7 +31,7 @@ public class MaximumProjection {
 		// cleanup
 		ij.op().run(CLIJ_close.class, inputGPU);
 		ij.op().run(CLIJ_close.class, maximumProjected);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

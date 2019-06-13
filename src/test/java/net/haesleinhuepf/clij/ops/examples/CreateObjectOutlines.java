@@ -38,7 +38,7 @@ public class CreateObjectOutlines {
 		ij.op().run(CLIJ_close.class, threshold);
 		ij.op().run(CLIJ_close.class, erodeBox);
 		ij.op().run(CLIJ_close.class, binaryXOr);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

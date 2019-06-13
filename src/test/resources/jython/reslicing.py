@@ -30,4 +30,4 @@ ui.show("resliced", result)
 #cleanup
 ops.run("CLIJ_close", inputGPU)
 ops.run("CLIJ_close", resliced)
-ops.run("CLIJ_close")
+

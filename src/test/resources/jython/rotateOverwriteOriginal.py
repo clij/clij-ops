@@ -41,4 +41,4 @@ ui.show("rotated overwriting original", result)
 #cleanup
 ops.run("CLIJ_close", blobsGPU)
 ops.run("CLIJ_close", targetGPU)
-ops.run("CLIJ_close")
+

@@ -35,4 +35,4 @@ ui.show("freely scaled", result)
 #cleanup
 ops.run("CLIJ_close", blobsGPU)
 ops.run("CLIJ_close", target)
-ops.run("CLIJ_close")
+

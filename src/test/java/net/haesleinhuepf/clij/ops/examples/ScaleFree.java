@@ -44,7 +44,7 @@ public class ScaleFree {
 		// cleanup
 		ij.op().run(CLIJ_close.class, blobsGPU);
 		ij.op().run(CLIJ_close.class, target);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

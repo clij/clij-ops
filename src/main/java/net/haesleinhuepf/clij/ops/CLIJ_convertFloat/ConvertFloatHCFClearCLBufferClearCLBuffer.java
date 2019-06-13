@@ -4,7 +4,6 @@ package net.haesleinhuepf.clij.ops.CLIJ_convertFloat;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.CLIJService;
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.coremem.enums.NativeTypeEnum;

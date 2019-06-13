@@ -30,4 +30,4 @@ ui.show("mean2D", result)
 #cleanup
 ops.run("CLIJ_close", inputGPU)
 ops.run("CLIJ_close", mean)
-ops.run("CLIJ_close")
+

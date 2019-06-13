@@ -11,7 +11,7 @@ import net.imglib2.img.Img;
 /*
  * Compares op.filter().gauss() with CLIJ_blurFast / CLIJ_blur
  */
-public class BlurFastTest extends CLIJOpsTest {
+public class BlurTest extends CLIJOpsTest {
 
 	float sigma = 5;
 	Img input = createAscendingImage();

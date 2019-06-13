@@ -57,4 +57,4 @@ ops.run("CLIJ_close", blobsGPU)
 ops.run("CLIJ_close", shiftXGPU)
 ops.run("CLIJ_close", shiftYGPU)
 ops.run("CLIJ_close", resultStackGPU)
-ops.run("CLIJ_close")
+

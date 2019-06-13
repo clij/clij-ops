@@ -30,4 +30,4 @@ ops.run("CLIJ_close", mean2DBox)
 ops.run("CLIJ_close", threshold)
 ops.run("CLIJ_close", erodeBox)
 ops.run("CLIJ_close", binaryXOr)
-ops.run("CLIJ_close")
+

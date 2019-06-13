@@ -3,6 +3,7 @@ package net.haesleinhuepf.clij.ops.examples;
 
 import java.io.IOException;
 
+import net.haesleinhuepf.clij.CLIJService;
 import org.junit.Test;
 
 import net.haesleinhuepf.clij.ops.CLIJ_close.CLIJ_close;
@@ -20,6 +21,7 @@ public class Project3D {
 		Img input = (Img) ij.io().open(getClass().getResource(
 			"/samples/t1-head.tif").getPath());
 		ij.ui().show("input", input);
+		ij.get(CLIJService.class).get("Intel(R) HD Graphics Kabylake Desktop GT1.5");
 		Img target = ij.op().create().img(new long[] { input.dimension(0), input
 			.dimension(1), 360 / angle_step });
 		Img target32 = ij.op().convert().float32(target);
@@ -53,7 +55,7 @@ public class Project3D {
 		ij.op().run(CLIJ_close.class, inputGPU);
 		ij.op().run(CLIJ_close.class, targetGPU);
 		ij.op().run(CLIJ_close.class, translated);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

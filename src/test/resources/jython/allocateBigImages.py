@@ -40,4 +40,4 @@ ui.show("crop of big image", result)
 ops.run("CLIJ_close", inputGPU)
 ops.run("CLIJ_close",bigStack)
 ops.run("CLIJ_close",crop)
-ops.run("CLIJ_close")
+

@@ -29,4 +29,4 @@ ops.run("CLIJ_close", blobsGPU)
 ops.run("CLIJ_close", blobsFloat)
 ops.run("CLIJ_close", blobsUInt8)
 ops.run("CLIJ_close", blobsUInt16)
-ops.run("CLIJ_close")
+

@@ -30,4 +30,4 @@ ui.show("maximum projection", result)
 #cleanup
 ops.run("CLIJ_close", inputGPU)
 ops.run("CLIJ_close", maximum_projected)
-ops.run("CLIJ_close")
+

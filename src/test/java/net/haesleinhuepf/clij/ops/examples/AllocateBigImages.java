@@ -43,7 +43,7 @@ public class AllocateBigImages {
 		// cleanup
 		ij.op().run(CLIJ_close.class, inputGPU);
 		ij.op().run(CLIJ_close.class, bigStack);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

@@ -29,7 +29,7 @@ public class Mean {
 		// cleanup
 		ij.op().run(CLIJ_close.class, inputGPU);
 		ij.op().run(CLIJ_close.class, mean);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

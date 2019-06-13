@@ -48,7 +48,7 @@ public class RotateFree {
 		// cleanup
 		ij.op().run(CLIJ_close.class, blobsGPU);
 		ij.op().run(CLIJ_close.class, targetGPU);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

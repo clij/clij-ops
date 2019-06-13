@@ -39,7 +39,7 @@ public class BackgroundSubtraction {
 		ij.op().run(CLIJ_close.class, background);
 		ij.op().run(CLIJ_close.class, background_subtracted);
 		ij.op().run(CLIJ_close.class, maximum_projected);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

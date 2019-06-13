@@ -66,7 +66,7 @@ public class Workflow {
 		ij.op().run(CLIJ_close.class, reslicedFromLeft);
 		ij.op().run(CLIJ_close.class, radialResliced);
 		ij.op().run(CLIJ_close.class, maxProjected);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

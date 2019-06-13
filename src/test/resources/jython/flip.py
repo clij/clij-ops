@@ -30,4 +30,4 @@ ui.show("flipped", result)
 #cleanup
 ops.run("CLIJ_close", inputGPU)
 ops.run("CLIJ_close", flipped)
-ops.run("CLIJ_close")
+

@@ -35,6 +35,6 @@ public class WorkflowScript {
 
 		ij.script().run(new File(getClass().getResource("/jython/workflow.py")
 			.getPath()), false, new Object[] { "data", imp, "ops", ij.op(), "ui", ij
-				.ui(), "io", ij.io() });
+				.ui() });
 	}
 }

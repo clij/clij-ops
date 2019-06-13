@@ -30,4 +30,4 @@ ui.show("minimum", result)
 #cleanup
 ops.run("CLIJ_close", inputGPU)
 ops.run("CLIJ_close", minimum)
-ops.run("CLIJ_close")
+

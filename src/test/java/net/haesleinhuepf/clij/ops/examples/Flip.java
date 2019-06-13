@@ -30,7 +30,7 @@ public class Flip {
 		// cleanup
 		ij.op().run(CLIJ_close.class, inputGPU);
 		ij.op().run(CLIJ_close.class, flipped);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

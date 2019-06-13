@@ -35,7 +35,7 @@ public class TurnStack {
 		ij.op().run(CLIJ_close.class, inputGPU);
 		ij.op().run(CLIJ_close.class, resliceLeft);
 		ij.op().run(CLIJ_close.class, rotateRight);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

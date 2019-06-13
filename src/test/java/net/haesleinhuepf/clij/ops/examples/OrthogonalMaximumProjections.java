@@ -23,8 +23,7 @@ public class OrthogonalMaximumProjections {
 		// push image to GPU
 		Object inputGPU = ij.op().run(CLIJ_push.class, input);
 
-		float downScalingFactorInXY = 0.666f; // because the image has slice
-																					// distance 1.5
+		float downScalingFactorInXY = 0.666f; // because the image has slice distance 1.5
 		float downScalingFactorInZ = 1;
 
 		Object downscaled = ij.op().run(
@@ -53,7 +52,7 @@ public class OrthogonalMaximumProjections {
 		ij.op().run(CLIJ_close.class, maximumProjectionX);
 		ij.op().run(CLIJ_close.class, maximumProjectionY);
 		ij.op().run(CLIJ_close.class, maximumProjectionZ);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

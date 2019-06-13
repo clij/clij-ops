@@ -45,7 +45,7 @@ public class TopHat {
 		ij.op().run(CLIJ_close.class, temp1);
 		ij.op().run(CLIJ_close.class, temp2);
 		ij.op().run(CLIJ_close.class, output);
-		ij.op().run(CLIJ_close.class);
+
 
 	}
 

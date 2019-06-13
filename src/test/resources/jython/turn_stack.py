@@ -32,4 +32,4 @@ ui.show("turned stack", result)
 ops.run("CLIJ_close", inputGPU)
 ops.run("CLIJ_close", resliceLeft)
 ops.run("CLIJ_close", rotateRight)
-ops.run("CLIJ_close")
+

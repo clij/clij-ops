@@ -79,7 +79,7 @@ public class ApplyVectorField {
 		ij.op().run(CLIJ_close.class, shiftXGPU);
 		ij.op().run(CLIJ_close.class, shiftYGPU);
 		ij.op().run(CLIJ_close.class, resultStackGPU);
-		ij.op().run(CLIJ_close.class);
+
 	}
 
 	public static void main(String... args) throws IOException {
