@@ -3,6 +3,7 @@ package net.haesleinhuepf.clij.ops.examples;
 
 import java.io.IOException;
 
+import net.haesleinhuepf.clij.ops.CLIJ_reslice.CLIJ_resliceLeft;
 import org.junit.Test;
 
 import net.haesleinhuepf.clij.ops.CLIJ_close.CLIJ_close;
@@ -21,8 +22,7 @@ public class Reslice {
 		// push image to GPU
 		Object inputGPU = ij.op().run(CLIJ_push.class, input);
 		// flip
-		Object resliced = ij.op().run(
-			net.haesleinhuepf.clij.ops.filter.reslice.CLIJ_resliceLeft.class,
+		Object resliced = ij.op().run(CLIJ_resliceLeft.class,
 			inputGPU);
 		// show result
 		Object result = ij.op().run(CLIJ_pull.class, resliced);

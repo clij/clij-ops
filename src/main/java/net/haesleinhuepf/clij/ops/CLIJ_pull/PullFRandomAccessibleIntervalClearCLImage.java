@@ -1,12 +1,12 @@
 
 package net.haesleinhuepf.clij.ops.CLIJ_pull;
 
-import net.haesleinhuepf.clij.CLIJ;
-import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
+import net.haesleinhuepf.clij.CLIJService;
 import net.haesleinhuepf.clij.clearcl.ClearCLImage;
 import net.imagej.ops.Contingent;
 import net.imagej.ops.special.function.AbstractUnaryFunctionOp;
 import net.imglib2.RandomAccessibleInterval;
+import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -19,6 +19,9 @@ public class PullFRandomAccessibleIntervalClearCLImage extends
 	CLIJ_pull, Contingent
 {
 
+	@Parameter
+	CLIJService clij;
+
 	@Override
 	public boolean conforms() {
 		return true;
@@ -26,7 +29,6 @@ public class PullFRandomAccessibleIntervalClearCLImage extends
 
 	@Override
 	public RandomAccessibleInterval calculate(ClearCLImage input) {
-		CLIJ clij = CLIJ.getInstance();
-		return clij.convert(input, RandomAccessibleInterval.class);
+		return clij.get().convert(input, RandomAccessibleInterval.class);
 	}
 }

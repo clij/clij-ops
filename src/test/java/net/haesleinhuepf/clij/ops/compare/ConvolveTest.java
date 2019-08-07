@@ -31,6 +31,7 @@ package net.haesleinhuepf.clij.ops.compare;
 
 import static net.haesleinhuepf.clij.utilities.CLInfo.listSupportedTypes;
 
+import net.haesleinhuepf.clij.ops.AbstractCLIJOpTest;
 import org.junit.Test;
 
 import net.haesleinhuepf.clij.CLIJ;
@@ -43,8 +44,9 @@ import net.imglib2.type.numeric.real.FloatType;
 
 /**
  * Tests involving convolvers.
+ * //TODO I think this test is a work in progress, find out what it actually is supposed to do
  */
-public class ConvolveTest extends AbstractOpTest {
+public class ConvolveTest extends AbstractCLIJOpTest {
 
 	final int xSize = 128;
 	final int ySize = 128;

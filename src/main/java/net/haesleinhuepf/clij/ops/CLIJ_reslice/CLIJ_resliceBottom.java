@@ -1,5 +1,5 @@
 
-package net.haesleinhuepf.clij.ops.filter.reslice;
+package net.haesleinhuepf.clij.ops.CLIJ_reslice;
 
 import net.imagej.ops.Op;
 

@@ -3,6 +3,7 @@ package net.haesleinhuepf.clij.ops.examples;
 
 import java.io.IOException;
 
+import net.haesleinhuepf.clij.ops.CLIJ_reslice.CLIJ_resliceLeft;
 import org.junit.Test;
 
 import net.haesleinhuepf.clij.ops.CLIJ_close.CLIJ_close;
@@ -22,8 +23,7 @@ public class TurnStack {
 		// push image to GPU
 		Object inputGPU = ij.op().run(CLIJ_push.class, input);
 		// reslice left
-		Object resliceLeft = ij.op().run(
-			net.haesleinhuepf.clij.ops.filter.reslice.CLIJ_resliceLeft.class,
+		Object resliceLeft = ij.op().run(CLIJ_resliceLeft.class,
 			inputGPU);
 		// rotate right
 		Object rotateRight = ij.op().run(CLIJ_rotateRight.class, resliceLeft);

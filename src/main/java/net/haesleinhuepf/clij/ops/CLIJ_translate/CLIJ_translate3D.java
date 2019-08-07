@@ -1,5 +1,5 @@
 
-package net.haesleinhuepf.clij.ops.CLIJ_translate3D;
+package net.haesleinhuepf.clij.ops.CLIJ_translate;
 
 import net.imagej.ops.Op;
 

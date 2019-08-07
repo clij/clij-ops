@@ -1,6 +1,7 @@
 
-package net.haesleinhuepf.clij.ops.filter.reslice;
+package net.haesleinhuepf.clij.ops.CLIJ_reslice;
 
+import net.haesleinhuepf.clij.ops.CLIJ_reslice.CLIJ_resliceBottom;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
