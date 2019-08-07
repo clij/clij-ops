@@ -1,6 +1,9 @@
 
 package net.haesleinhuepf.clij.ops.misc;
 
+import net.haesleinhuepf.clij.ops.CLIJ_pull.CLIJ_pull;
+import net.haesleinhuepf.clij.ops.CLIJ_reslice.CLIJ_resliceLeft;
+import net.haesleinhuepf.clij.ops.CLIJ_reslice.CLIJ_resliceTop;
 import org.junit.Test;
 
 import net.haesleinhuepf.clij.CLIJ;
@@ -78,15 +81,12 @@ public class PosterTest2 extends CLIJOpsTest {
 			net.haesleinhuepf.clij.ops.transform.downsample.CLIJ_downsample.class,
 			scaled, positiveStack, sampleX, sampleY, sampleZ);
 		ClearCLBuffer reslicedFromTop = clij.create(original);
-		ij.op().run(net.haesleinhuepf.clij.ops.filter.reslice.CLIJ_resliceTop.class,
-			reslicedFromTop, scaled);
+		ij.op().run(CLIJ_resliceTop.class, reslicedFromTop, scaled);
 		ClearCLBuffer radialResliced = clij.create(original);
 		ij.op().run(CLIJ_radialProjection.class, radialResliced, reslicedFromTop,
-			/*360.0, */1.0);
+			360.0, 1.0);
 		ClearCLBuffer reslicedFromLeft = clij.create(original);
-		ij.op().run(
-			net.haesleinhuepf.clij.ops.filter.reslice.CLIJ_resliceLeft.class,
-			reslicedFromLeft, radialResliced);
+		ij.op().run(CLIJ_resliceLeft.class, reslicedFromLeft, radialResliced);
 		ClearCLBuffer maxProjected = clij.create(original);
 		ij.op().run(CLIJ_maximumZProjection.class, maxProjected, reslicedFromLeft);
 
@@ -101,7 +101,7 @@ public class PosterTest2 extends CLIJOpsTest {
 		radialResliced.close();
 		maxProjected.close();
 
-		return (Img) clij.convert(maxProjected, RandomAccessibleInterval.class);
+		return (Img) ij.op().run(CLIJ_pull.class, maxProjected);
 
 	}
 

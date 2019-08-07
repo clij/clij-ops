@@ -12,6 +12,8 @@ import net.haesleinhuepf.clij.ops.CLIJ_close.CLIJ_close;
 import net.haesleinhuepf.clij.ops.CLIJ_maxProjection.CLIJ_maximumZProjection;
 import net.haesleinhuepf.clij.ops.CLIJ_maximumImageAndScalar.CLIJ_maximumImageAndScalar;
 import net.haesleinhuepf.clij.ops.CLIJ_radialProjection.CLIJ_radialProjection;
+import net.haesleinhuepf.clij.ops.CLIJ_reslice.CLIJ_resliceLeft;
+import net.haesleinhuepf.clij.ops.CLIJ_reslice.CLIJ_resliceTop;
 import net.imagej.ImageJ;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -102,12 +104,10 @@ public class PosterTestInteractive {
 		Object scaled = ij.op().run(
 			net.haesleinhuepf.clij.ops.transform.downsample.CLIJ_downsample.class,
 			positiveStack, sampleX, sampleY, sampleZ);
-		Object reslicedFromTop = ij.op().run(
-			net.haesleinhuepf.clij.ops.filter.reslice.CLIJ_resliceTop.class, scaled);
+		Object reslicedFromTop = ij.op().run(CLIJ_resliceTop.class, scaled);
 		Object radialResliced = ij.op().run(CLIJ_radialProjection.class,
 			reslicedFromTop, 360, 1.0);
-		Object reslicedFromLeft = ij.op().run(
-			net.haesleinhuepf.clij.ops.filter.reslice.CLIJ_resliceLeft.class,
+		Object reslicedFromLeft = ij.op().run(CLIJ_resliceLeft.class,
 			radialResliced);
 		Object maxProjected = ij.op().run(CLIJ_maximumZProjection.class,
 			reslicedFromLeft);

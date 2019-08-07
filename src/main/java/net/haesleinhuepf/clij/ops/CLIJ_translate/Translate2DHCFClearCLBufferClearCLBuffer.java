@@ -1,5 +1,5 @@
 
-package net.haesleinhuepf.clij.ops.CLIJ_translate2D;
+package net.haesleinhuepf.clij.ops.CLIJ_translate;
 
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
@@ -19,7 +19,7 @@ import net.imglib2.realtransform.AffineTransform3D;
 @Plugin(type = CLIJ_translate2D.class)
 public class Translate2DHCFClearCLBufferClearCLBuffer extends
 	AbstractUnaryHybridCF<ClearCLBuffer, ClearCLBuffer> implements
-	CLIJ_translate2D, Contingent
+		CLIJ_translate2D, Contingent
 {
 
 	@Parameter

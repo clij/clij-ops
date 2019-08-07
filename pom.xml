@@ -108,6 +108,13 @@
 			<artifactId>imagej</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej-ops</artifactId>
+			<version>0.43.2</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<repositories>

@@ -1,6 +1,8 @@
 
 package net.haesleinhuepf.clij.ops.CLIJ_pull;
 
+import net.haesleinhuepf.clij.CLIJService;
+import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 import net.haesleinhuepf.clij.CLIJ;
@@ -19,6 +21,9 @@ public class PullFRandomAccessibleIntervalClearCLBuffer extends
 	CLIJ_pull, Contingent
 {
 
+	@Parameter
+	CLIJService clij;
+
 	@Override
 	public boolean conforms() {
 		return true;
@@ -26,7 +31,6 @@ public class PullFRandomAccessibleIntervalClearCLBuffer extends
 
 	@Override
 	public RandomAccessibleInterval calculate(ClearCLBuffer input) {
-		CLIJ clij = CLIJ.getInstance();
-		return clij.pullRAI(input);
+		return clij.get().pullRAI(input);
 	}
 }
