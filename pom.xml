@@ -66,8 +66,8 @@
 
 	<scm>
 		<connection>scm:git:git://github.com/clij/clij-ops</connection>
-        <developerConnection>scm:git:git@github.com/clij/clij-ops</developerConnection>
-        <tag>HEAD</tag>
+    <developerConnection>scm:git:git@github.com/clij/clij-ops</developerConnection>
+    <tag>HEAD</tag>
 		<url>https://github.com/clij/clij-ops</url>
 	</scm>
 	<issueManagement>
