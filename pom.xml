@@ -82,7 +82,8 @@
 		<package-name>net.haesleinhuepf</package-name>
 		<license.licenseName>bsd_3</license.licenseName>
 		<license.copyrightOwners>Deborah Schmidt, Robert Haase, MPI-CBG Dresden</license.copyrightOwners>
-		<imagej.app.directory>C:/programs/fiji-win64/Fiji.app/</imagej.app.directory>
+    <releaseProfiles>deploy-to-scijava</releaseProfiles>
+		<scijava.app.directory>C:/programs/fiji-win64/Fiji.app/</scijava.app.directory>
 	</properties>
 
 	<dependencies>
