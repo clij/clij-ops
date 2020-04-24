@@ -82,7 +82,6 @@
 		<package-name>net.haesleinhuepf</package-name>
 		<license.licenseName>bsd_3</license.licenseName>
 		<license.copyrightOwners>Deborah Schmidt, Robert Haase, MPI-CBG Dresden</license.copyrightOwners>
-    <releaseProfiles>deploy-to-scijava</releaseProfiles>
 		<scijava.app.directory>C:/programs/fiji-win64/Fiji.app/</scijava.app.directory>
 	</properties>
 
@@ -129,14 +128,4 @@
 			<url>http://dl.bintray.com/haesleinhuepf/clij</url>
 		</repository>
 	</repositories>
-
-	<distributionManagement>
-
-		<repository>
-			<id>bintray-haesleinhuepf-snapshots</id>
-			<name>bintray-snapshots</name>
-			<url>https://api.bintray.com/maven/haesleinhuepf/clij/clij-ops/;publish=1</url>
-		</repository>
-
-	</distributionManagement>
 </project>
